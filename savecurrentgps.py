@@ -237,4 +237,5 @@ def main():
     # exitscreen(screen, y, x)
 
 if __name__ == '__main__':
-    curses.wrapper(main())
+    # curses.wrapper(main())
+    sys.exit(main())
