@@ -212,7 +212,7 @@ def main():
     # silently query relevant dropbox folder for last saved name and
     # make new name, adding one to final number in filename
     newfilename, newfilepath = makenewfilename(answer)
-    copyscreen(screen, y, x, newfilename)
+    # copyscreen(screen, y, x, newfilename)
 
     # copy GPX file from GPS using newfilepath as destination
     copy2(GARFILEPTH, newfilepath)
