@@ -14,10 +14,11 @@ a new filename and uses this as the destination to copy the file from
 the mount (GARFILEPTH) to the dropbox folder. Then it asks the user if
 they want to view the file in viking.
 
-TODO improve robustness by checking for viking on system. Include
-options to step back or exit? Store GARMNTPT, GARFILEPTH and
-CURYEAR in a separate settings file and use ConfigParser to read
-them back in.
+TODO
+1. Generalise more by adding usernames, location of stored current
+gpx files etc. in settings.cfg
+2. improve robustness by checking for viking on system.
+3. Include options to step back or exit?
 """
 
 import curses
@@ -38,13 +39,15 @@ def makenewfilename(name, CURYEAR):
 
     # look in directory and find latest filename in order to increment
     filelist = glob(gpxfilepath + '*.gpx')
-    lastfile = sorted(filelist)[-1]
-    # print "Last file saved is:", lastfile
-
-    # split last filename and increment number for filename
-    lastfile = os.path.splitext(lastfile)[0]
-    filenum = lastfile[lastfile.rfind('-') + 1:]
-    newnum = '%02d' % (int(filenum) + 1)
+    if filelist == []:
+        # it might be a new year and the directory is empty
+        newnum = '01'
+    else:
+        lastfile = sorted(filelist)[-1]
+        # split last filename and increment number for filename
+        lastfile = os.path.splitext(lastfile)[0]
+        filenum = lastfile[lastfile.rfind('-') + 1:]
+        newnum = '%02d' % (int(filenum) + 1)
 
     # make user character for filename generation from answer
     userchar = name[0].upper()
@@ -198,15 +201,16 @@ def getsettings(path):
     config.read(path)
     CURYEAR = config.get('core', 'currentyear')
     GARMNTPT = config.get('core', 'garminlocation1')
-    GARFILEPTH = config.get('core', 'garminlocation2')
-    return GARMNTPT, GARFILEPTH, CURYEAR
+    garminlocation2 = config.get('core', 'garminlocation2')
+    return GARMNTPT, garminlocation2, CURYEAR
 
 
 def main():
     """
     """
     # get settings
-    GARMNTPT, GARFILEPTH, CURYEAR = getsettings('settings.cfg')
+    GARMNTPT, garminlocation2, CURYEAR = getsettings('settings.cfg')
+    GARFILEPTH = GARMNTPT + garminlocation2
 
     # initialise screen
     screen, y, x = initcurses()
