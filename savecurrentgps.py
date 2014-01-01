@@ -15,22 +15,18 @@ the mount (GARFILEPTH) to the dropbox folder. Then it asks the user if
 they want to view the file in viking.
 
 TODO improve robustness by checking for viking on system. Include
-options to step back or exit?
+options to step back or exit? Store GARMNTPT, GARFILEPTH and
+CURYEAR in a separate settings file and use ConfigParser to read
+them back in.
 """
 
 import curses
 import sys
-from shutil import copy2
 import os
-from glob import glob
 import subprocess
-
-# Hard code the location of the GPS when it mounts
-GARMNTPT = "/media/GARMIN"
-# This should be the path to the current file on the GPS
-GARFILEPTH = GARMNTPT + "/Garmin/GPX/Current/Current.gpx"
-# current year
-CURYEAR = "2013"
+import ConfigParser
+from shutil import copy2
+from glob import glob
 
 
 def makenewfilename(answer):
@@ -194,35 +190,51 @@ def copyscreen(screen, y, x, newfilename):
     return
 
 
+def getsettings(path):
+    """
+    """
+    config = ConfigParser.RawConfigParser()
+    config.read(path)
+    CURYEAR = config.get('core', 'currentyear')
+    GARMNTPT = config.get('core', 'garminlocation1')
+    GARFILEPTH = config.get('core', 'garminlocation2')
+    return GARMNTPT, GARFILEPTH, CURYEAR
+
+
+
 def main():
     """
     """
-    # initialise screen
-    screen, y, x = initcurses()
+    # get settings
+    GARMNTPT, GARFILEPTH, CURYEAR = getsettings('settings.cfg')
+    print GARFILEPTH, GARMNTPT, CURYEAR
 
-    # Check screen
-    welcomescreen(screen, y, x)
+    # # initialise screen
+    # screen, y, x = initcurses()
 
-    # Check gps plugged in
-    gpspresent(screen, y, x)
+    # # Check screen
+    # welcomescreen(screen, y, x)
 
-    # ask if the GPS is Soph's or Dan's
-    answer = asksophdan(screen, y, x)
+    # # Check gps plugged in
+    # gpspresent(screen, y, x)
 
-    # silently query relevant dropbox folder for last saved name and
-    # make new name, adding one to final number in filename
-    newfilename, newfilepath = makenewfilename(answer)
-    # copyscreen(screen, y, x, newfilename)
+    # # ask if the GPS is Soph's or Dan's
+    # answer = asksophdan(screen, y, x)
 
-    # copy GPX file from GPS using newfilepath as destination
-    copy2(GARFILEPTH, newfilepath)
+    # # silently query relevant dropbox folder for last saved name and
+    # # make new name, adding one to final number in filename
+    # newfilename, newfilepath = makenewfilename(answer)
+    # # copyscreen(screen, y, x, newfilename)
 
-    # offer the user the option of opening file in Viking
-    vikingoption(screen, y, x, newfilepath)
+    # # copy GPX file from GPS using newfilepath as destination
+    # copy2(GARFILEPTH, newfilepath)
 
-    # exit, advising user to check GPX file in Viking and then erase
-    # the data from the GPS
-    exitscreen(screen, y, x)
+    # # offer the user the option of opening file in Viking
+    # vikingoption(screen, y, x, newfilepath)
+
+    # # exit, advising user to check GPX file in Viking and then erase
+    # # the data from the GPS
+    # exitscreen(screen, y, x)
 
 if __name__ == '__main__':
     curses.wrapper(main())
