@@ -186,18 +186,6 @@ def vikingoption(screen, y, x, newfilepath):
             exitscreen(screen, y, x)
 
 
-def copyscreen(screen, y, x, newfilename):
-    """
-    """
-    screen.clear()
-    screen.border(0)
-    screen.addstr(y, x, "New file will be called: %s" % newfilename)
-    screen.addstr(y + 2, x, "Press any key to copy file")
-    screen.refresh()
-    screen.getch()
-    return
-
-
 def checksettings(settingspath, screen, y, x):
     """
     Check the user has the settings file installed and advise
@@ -239,8 +227,7 @@ def main():
     # check settings
     settingspath = os.path.expanduser('~/bin/settings.cfg')
     checksettings(settingspath, screen, y, x)
-
-    # get settings
+    # load settings
     GARMNTPT, garminlocation2, CURYEAR = getsettings(settingspath)
     GARFILEPTH = GARMNTPT + garminlocation2
 
@@ -256,7 +243,6 @@ def main():
     # silently query relevant dropbox folder for last saved name and
     # make new name, adding one to final number in filename
     newfilename, newfilepath = makenewfilename(name, CURYEAR)
-    # copyscreen(screen, y, x, newfilename)
 
     # copy GPX file from GPS using newfilepath as destination
     copy2(GARFILEPTH, newfilepath)
