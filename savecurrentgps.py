@@ -17,7 +17,11 @@ they want to view the file in viking.
 TODO
 1. Generalise more by adding usernames, location of stored current
 gpx files etc. in settings.cfg
-2. improve robustness by checking for viking on system.
+
+2. improve robustness by checking for viking on system. (answer
+might be here
+http://stackoverflow.com/questions/775351/os-path-exists-for-files-in-your-path)
+
 3. Include options to step back or exit?
 """
 
@@ -214,7 +218,7 @@ def checksettings(settingspath, screen, y, x):
     return
 
 
-def getsettings(path, screen, y, x):
+def getsettings(path):
     """
     get settings from an external settings file
     """
@@ -233,7 +237,7 @@ def main():
     screen, y, x = initcurses()
 
     # check settings
-    settingspath = 'settings.cfg'
+    settingspath = os.path.expanduser('~/bin/settings.cfg')
     checksettings(settingspath, screen, y, x)
 
     # get settings
