@@ -91,7 +91,7 @@ def gpspresent(screen, y, x, GARMNTPT):
     if not os.path.exists(GARMNTPT):
         screen.clear()
         screen.border(0)
-        screen.addstr(y, x, "Error: GPS not found")
+        screen.addstr(y, x, ("Error: GPS not found at %s" % GARMNTPT))
         screen.addstr(y + 2, x, "Please plug in GPS and wait for it to finish saving data as GPX")
         screen.addstr(y + 3, x, "Then run this script again")
         screen.addstr(y + 5, x, "Press any key to exit")
