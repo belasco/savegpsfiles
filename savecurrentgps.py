@@ -202,7 +202,6 @@ def getsettings(path):
     return GARMNTPT, GARFILEPTH, CURYEAR
 
 
-
 def main():
     """
     """
