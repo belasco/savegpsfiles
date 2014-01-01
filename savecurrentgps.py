@@ -29,12 +29,12 @@ from shutil import copy2
 from glob import glob
 
 
-def makenewfilename(answer):
+def makenewfilename(name):
     """
     generate a filename and path for the destination GPX file
     """
     # find location of current GPS files on user's machine
-    gpxfilepath = os.path.expanduser("~/Dropbox/planb/currentGPS/%s%s/" % (answer, CURYEAR))
+    gpxfilepath = os.path.expanduser("~/Dropbox/planb/currentGPS/%s%s/" % (name, CURYEAR))
 
     # look in directory and find latest filename in order to increment
     filelist = glob(gpxfilepath + '*.gpx')
@@ -47,7 +47,7 @@ def makenewfilename(answer):
     newnum = '%02d' % (int(filenum) + 1)
 
     # make user character for filename generation from answer
-    userchar = answer[0].upper()
+    userchar = name[0].upper()
 
     # put it all together and return filepath
     newfilename = "%s-%s-%s.gpx" % (CURYEAR, userchar, newnum)
@@ -192,6 +192,7 @@ def copyscreen(screen, y, x, newfilename):
 
 def getsettings(path):
     """
+    get settings from an external settings file
     """
     config = ConfigParser.RawConfigParser()
     config.read(path)
@@ -207,35 +208,33 @@ def main():
     """
     # get settings
     GARMNTPT, GARFILEPTH, CURYEAR = getsettings('settings.cfg')
-    print GARFILEPTH, GARMNTPT, CURYEAR
 
-    # # initialise screen
-    # screen, y, x = initcurses()
+    # initialise screen
+    screen, y, x = initcurses()
 
-    # # Check screen
-    # welcomescreen(screen, y, x)
+    # Check screen
+    welcomescreen(screen, y, x)
 
-    # # Check gps plugged in
-    # gpspresent(screen, y, x)
+    # Check gps plugged in
+    gpspresent(screen, y, x)
 
-    # # ask if the GPS is Soph's or Dan's
-    # answer = asksophdan(screen, y, x)
+    # ask if the GPS is Soph's or Dan's
+    name = asksophdan(screen, y, x)
 
-    # # silently query relevant dropbox folder for last saved name and
-    # # make new name, adding one to final number in filename
-    # newfilename, newfilepath = makenewfilename(answer)
-    # # copyscreen(screen, y, x, newfilename)
+    # silently query relevant dropbox folder for last saved name and
+    # make new name, adding one to final number in filename
+    newfilename, newfilepath = makenewfilename(name)
+    # copyscreen(screen, y, x, newfilename)
 
-    # # copy GPX file from GPS using newfilepath as destination
-    # copy2(GARFILEPTH, newfilepath)
+    # copy GPX file from GPS using newfilepath as destination
+    copy2(GARFILEPTH, newfilepath)
 
-    # # offer the user the option of opening file in Viking
-    # vikingoption(screen, y, x, newfilepath)
+    # offer the user the option of opening file in Viking
+    vikingoption(screen, y, x, newfilepath)
 
-    # # exit, advising user to check GPX file in Viking and then erase
-    # # the data from the GPS
-    # exitscreen(screen, y, x)
+    # exit, advising user to check GPX file in Viking and then erase
+    # the data from the GPS
+    exitscreen(screen, y, x)
 
 if __name__ == '__main__':
-    # curses.wrapper(main())
-    sys.exit(main())
+    curses.wrapper(main())
