@@ -143,6 +143,7 @@ def exitscreen(screen, y, x):
     curses.endwin()
     sys.exit()
 
+
 def noviking(screen, y, x):
     """
     Report to the user that Viking isn't on the current system
@@ -193,7 +194,27 @@ def copyscreen(screen, y, x, newfilename):
     return
 
 
-def getsettings(path):
+def checksettings(settingspath, screen, y, x):
+    """
+    Check the user has the settings file installed and advise
+    """
+    if not os.path.exists(settingspath):
+        screen.clear()
+        screen.border(0)
+        screen.addstr(y, x, ("Error: Settings file not found at %s" % settingspath))
+        screen.addstr(y + 2, x, "Please link to the settings file")
+        screen.addstr(y + 3, x, "from the directory this script is run in")
+        screen.addstr(y + 4, x, "and try again")
+        screen.addstr(y + 6, x, "Press any key to exit")
+        screen.refresh()
+        curses.beep()
+        screen.getch()
+        curses.endwin()
+        sys.exit(2)
+    return
+
+
+def getsettings(path, screen, y, x):
     """
     get settings from an external settings file
     """
@@ -208,12 +229,16 @@ def getsettings(path):
 def main():
     """
     """
-    # get settings
-    GARMNTPT, garminlocation2, CURYEAR = getsettings('settings.cfg')
-    GARFILEPTH = GARMNTPT + garminlocation2
-
     # initialise screen
     screen, y, x = initcurses()
+
+    # check settings
+    settingspath = 'settings.cfg'
+    checksettings(settingspath, screen, y, x)
+
+    # get settings
+    GARMNTPT, garminlocation2, CURYEAR = getsettings(settingspath)
+    GARFILEPTH = GARMNTPT + garminlocation2
 
     # Check screen
     welcomescreen(screen, y, x)
