@@ -29,7 +29,7 @@ from shutil import copy2
 from glob import glob
 
 
-def makenewfilename(name):
+def makenewfilename(name, CURYEAR):
     """
     generate a filename and path for the destination GPX file
     """
@@ -84,7 +84,7 @@ def welcomescreen(screen, y, x):
     return
 
 
-def gpspresent(screen, y, x):
+def gpspresent(screen, y, x, GARMNTPT):
     """
     if GPS not plugged in, end script giving user instructions
     """
@@ -216,14 +216,14 @@ def main():
     welcomescreen(screen, y, x)
 
     # Check gps plugged in
-    gpspresent(screen, y, x)
+    gpspresent(screen, y, x, GARMNTPT)
 
     # ask if the GPS is Soph's or Dan's
     name = asksophdan(screen, y, x)
 
     # silently query relevant dropbox folder for last saved name and
     # make new name, adding one to final number in filename
-    newfilename, newfilepath = makenewfilename(name)
+    newfilename, newfilepath = makenewfilename(name, CURYEAR)
     # copyscreen(screen, y, x, newfilename)
 
     # copy GPX file from GPS using newfilepath as destination
