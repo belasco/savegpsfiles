@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
-savecurrentgpsncurses.py
+"""savecurrentgpsncurses.py
 2013/02/06 21:58:17 Daniel Belasco Rogers dan@planbperformance.net
 
 This is an adaptation of savecurrentgps.py
@@ -23,6 +22,9 @@ might be here
 http://stackoverflow.com/questions/775351/os-path-exists-for-files-in-your-path)
 
 3. Include options to step back or exit?
+
+4. Automatically call preprocessgpx.py, open then open THIS in
+Viking so you can manually clean as you go along
 """
 
 import curses
