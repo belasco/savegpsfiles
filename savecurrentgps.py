@@ -94,10 +94,10 @@ def welcomescreen(screen, y, x):
     return
 
 
-def advisecopy(screen, y, x, newfilepath):
+def adviseprocess(screen, y, x, newfilepath):
     screen.clear()
     screen.border(0)
-    screen.addstr(y, x, "Copied file from Garmin as")
+    screen.addstr(y, x, "Also created processed file as")
     screen.addstr(y + 1, x, newfilepath)
     screen.addstr(y + 3, x, "Press any key to continue")
     screen.refresh()
@@ -152,9 +152,11 @@ def exitscreen(screen, y, x):
     """
     screen.clear()
     screen.border(0)
-    screen.addstr(y, x, "Copied data from GPS.")
-    screen.addstr(y + 2, x, "After checking the result is what you expected in Viking or similar,")
-    screen.addstr(y + 3, x, "you can safely unplug the GPS, turn it on and erase the tracks to clear it.")
+    screen.addstr(y, x, "Copied data from GPS and created a preprocessed file")
+    screen.addstr(y + 2, x, "After checking the result is what you expected\
+ in Viking or similar,")
+    screen.addstr(y + 3, x, "you can safely unplug the GPS, turn it on and\
+ erase the tracks to clear it.")
     screen.addstr(y + 5, x, "Press any key to exit")
     screen.refresh()
     screen.getch()
@@ -179,12 +181,11 @@ def noviking(screen, y, x):
 def vikingoption(screen, y, x, newfilepath):
     """
     Offer the user the option to open the file in Viking.
-    Is this an alternative last screen?
     """
     screen.clear()
     screen.border(0)
-    screen.addstr(y, x, "Do you want to view the file in Viking")
-    screen.addstr(y + 1, x, "on exit?")
+    screen.addstr(y, x, "Do you want to edit the")
+    screen.addstr(y + 1, x, "processed file in Viking?")
     screen.addstr(y + 3, x, "Y", curses.A_UNDERLINE)
     screen.addstr(y + 3, x + 1, "es/")
     screen.addstr(y + 3, x + 4, "N", curses.A_UNDERLINE)
@@ -282,22 +283,16 @@ def main():
     # copy GPX file from GPS using newfilepath as destination
     copy2(GARMNTPT + garminfilelocation, newfilepath)
 
-    # advise about the copy
-    advisecopy(screen, y, x, newfilepath)
-
-    # evoke preprocessGPX on copied file
+    # evoke preprocessGPX on copied file, make file paths and tell
+    # user
     preprocesslocation = os.path.join(os.path.dirname
                                       (os.path.dirname(newfilepath)),
                                       dropboxpreprocessed)
     preprocess(newfilepath, preprocesslocation)
-
-    # make path to that new preprocessed file
     processedfilepath = os.path.join(preprocesslocation,
                                      os.path.basename(newfilepath))
-
     processedfilepath = "%s_pp.gpx" % (os.path.splitext(processedfilepath)[0])
-
-    advisecopy(screen, y, x, processedfilepath)
+    adviseprocess(screen, y, x, processedfilepath)
 
     # offer the user the option of opening file in Viking
     vikingoption(screen, y, x, processedfilepath)
