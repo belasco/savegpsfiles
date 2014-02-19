@@ -36,12 +36,13 @@ from shutil import copy2
 from glob import glob
 
 
-def makenewfilename(name, CURYEAR):
+def makenewfilename(dropboxlocation, dropboxoriginal, name, CURYEAR):
     """
     generate a filename and path for the destination GPX file
     """
     # find location of current GPS files on user's machine
-    gpxfilepath = os.path.expanduser("~/Dropbox/planb/currentGPS/%s%s/" % (name, CURYEAR))
+    gpxfilepath = os.path.join(dropboxlocation, name + CURYEAR,
+                               dropboxoriginal)
 
     # look in directory and find latest filename in order to increment
     filelist = glob(gpxfilepath + '*.gpx')
@@ -88,6 +89,17 @@ def welcomescreen(screen, y, x):
     screen.addstr(y, x, "Make sure your GPS is plugged in")
     screen.addstr(y + 1, x, "and has finished making the GPX file")
     screen.addstr(y + 3, x, "Then press any key to continue")
+    screen.refresh()
+    screen.getch()
+    return
+
+
+def advisecopy(screen, y, x, newfilepath):
+    screen.clear()
+    screen.border(0)
+    screen.addstr(y, x, "Copied file from Garmin as")
+    screen.addstr(y + 1, x, newfilepath)
+    screen.addstr(y + 3, x, "Press any key to continue")
     screen.refresh()
     screen.getch()
     return
@@ -182,10 +194,22 @@ def vikingoption(screen, y, x, newfilepath):
         answer = screen.getch()
         if answer in [ord('Y'), ord('y')]:
             with open(os.devnull, "w") as fnull:
-                subprocess.Popen(['viking', newfilepath], stdout=fnull, stderr=fnull)
-            exitscreen(screen, y, x)
+                subprocess.Popen(['viking', newfilepath],
+                                 stdout=fnull, stderr=fnull)
+            return
         elif answer in [ord('N'), ord('n')]:
-            exitscreen(screen, y, x)
+            return
+
+
+def preprocess(newfilepath, preprocesslocation):
+    """
+    run preprocessGPX on the copied file
+    """
+    with open(os.devnull, 'w') as fnull:
+        subprocess.Popen(['preprocessGPX', newfilepath, '-d',
+                          preprocesslocation, '-c'],
+                         stdout=fnull, stderr=fnull)
+    return
 
 
 def checksettings(settingspath, screen, y, x):
@@ -195,7 +219,8 @@ def checksettings(settingspath, screen, y, x):
     if not os.path.exists(settingspath):
         screen.clear()
         screen.border(0)
-        screen.addstr(y, x, ("Error: Settings file not found at %s" % settingspath))
+        screen.addstr(y, x, ("Error: Settings file not found at %s"
+                             % settingspath))
         screen.addstr(y + 2, x, "Please link to the settings file")
         screen.addstr(y + 3, x, "from the directory this script is run in")
         screen.addstr(y + 4, x, "and try again")
@@ -215,9 +240,13 @@ def getsettings(path):
     config = ConfigParser.RawConfigParser()
     config.read(path)
     CURYEAR = config.get('core', 'currentyear')
-    GARMNTPT = config.get('core', 'garminlocation1')
-    garminlocation2 = config.get('core', 'garminlocation2')
-    return GARMNTPT, garminlocation2, CURYEAR
+    GARMNTPT = config.get('core', 'garminmountpoint')
+    garminfilelocation = config.get('core', 'garminfilelocation')
+    dropboxlocation = config.get('core', 'dropboxlocation')
+    dropboxoriginal = config.get('core', 'dropboxoriginal')
+    dropboxpreprocessed = config.get('core', 'dropboxpreprocessed')
+    return GARMNTPT, garminfilelocation, CURYEAR, dropboxlocation,\
+        dropboxoriginal, dropboxpreprocessed
 
 
 def main():
@@ -230,8 +259,10 @@ def main():
     settingspath = os.path.expanduser('~/bin/settings.cfg')
     checksettings(settingspath, screen, y, x)
     # load settings
-    GARMNTPT, garminlocation2, CURYEAR = getsettings(settingspath)
-    GARFILEPTH = GARMNTPT + garminlocation2
+    GARMNTPT, garminfilelocation, CURYEAR, dropboxlocation,\
+        dropboxoriginal, dropboxpreprocessed = getsettings(settingspath)
+
+    dropboxlocation = os.path.expanduser(dropboxlocation)
 
     # Check screen
     welcomescreen(screen, y, x)
@@ -244,13 +275,29 @@ def main():
 
     # silently query relevant dropbox folder for last saved name and
     # make new name, adding one to final number in filename
-    newfilename, newfilepath = makenewfilename(name, CURYEAR)
+    newfilename, newfilepath = makenewfilename(dropboxlocation,
+                                               dropboxoriginal,
+                                               name, CURYEAR)
 
     # copy GPX file from GPS using newfilepath as destination
-    copy2(GARFILEPTH, newfilepath)
+    #copy2(GARMNTPT + garminfilelocation, newfilepath)
+
+    # advise about the copy
+    advisecopy(screen, y, x, newfilepath)
+
+    # evoke preprocessGPX on copied file
+    preprocesslocation = os.path.join(os.path.dirname(os.path.dirname(newfilepath)), dropboxpreprocessed)
+    preprocess(newfilepath, preprocesslocation)
+
+    # make path to that new preprocessed file
+    processedfilepath = os.path.join(preprocesslocation, os.path.basename(newfilepath))
+
+    processedfilepath = "%s_pp.gpx" % (os.path.splitext(processedfilepath)[0])
+
+    advisecopy(screen, y, x, processedfilepath)
 
     # offer the user the option of opening file in Viking
-    vikingoption(screen, y, x, newfilepath)
+    vikingoption(screen, y, x, processedfilepath)
 
     # exit, advising user to check GPX file in Viking and then erase
     # the data from the GPS
