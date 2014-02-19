@@ -45,7 +45,7 @@ def makenewfilename(dropboxlocation, dropboxoriginal, name, CURYEAR):
                                dropboxoriginal)
 
     # look in directory and find latest filename in order to increment
-    filelist = glob(gpxfilepath + '*.gpx')
+    filelist = glob(os.path.join(gpxfilepath, '*.gpx'))
     if filelist == []:
         # it might be a new year and the directory is empty
         newnum = '01'
@@ -280,7 +280,7 @@ def main():
                                                name, CURYEAR)
 
     # copy GPX file from GPS using newfilepath as destination
-    #copy2(GARMNTPT + garminfilelocation, newfilepath)
+    copy2(GARMNTPT + garminfilelocation, newfilepath)
 
     # advise about the copy
     advisecopy(screen, y, x, newfilepath)
