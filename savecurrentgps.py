@@ -286,11 +286,14 @@ def main():
     advisecopy(screen, y, x, newfilepath)
 
     # evoke preprocessGPX on copied file
-    preprocesslocation = os.path.join(os.path.dirname(os.path.dirname(newfilepath)), dropboxpreprocessed)
+    preprocesslocation = os.path.join(os.path.dirname
+                                      (os.path.dirname(newfilepath)),
+                                      dropboxpreprocessed)
     preprocess(newfilepath, preprocesslocation)
 
     # make path to that new preprocessed file
-    processedfilepath = os.path.join(preprocesslocation, os.path.basename(newfilepath))
+    processedfilepath = os.path.join(preprocesslocation,
+                                     os.path.basename(newfilepath))
 
     processedfilepath = "%s_pp.gpx" % (os.path.splitext(processedfilepath)[0])
 
