@@ -14,17 +14,12 @@ the mount (GARFILEPTH) to the dropbox folder. Then it asks the user if
 they want to view the file in viking.
 
 TODO
-1. Generalise more by adding usernames, location of stored current
-gpx files etc. in settings.cfg
-
-2. improve robustness by checking for viking on system. (answer
+1. improve robustness by checking for viking on system. (answer
 might be here
 http://stackoverflow.com/questions/775351/os-path-exists-for-files-in-your-path)
 
-3. Include options to step back or exit?
+2. Include options to step back or exit?
 
-4. Automatically call preprocessgpx.py, open then open THIS in
-Viking so you can manually clean as you go along
 """
 
 import curses
