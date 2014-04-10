@@ -44,4 +44,4 @@ nosetests.xml
 *.pytest*
 
 # settings
-settings.cfg
+# settings.cfg
