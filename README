@@ -1,0 +1,25 @@
+###  README --- /home/dbr/gitpython/savegpsfiles/
+
+## Copyright 2014 Daniel Belasco Rogers
+##
+## Author: dan@planbperformance.net
+## Keywords: GPS, GPX, Garmin, file copy, utility
+
+The script is to automate the process of saving new gpx files.  It
+checks for the GPS, which should mount at GARMNTPT, looks in the
+user's dropbox location, finds the number of the last file, generates
+a new filename and uses this as the destination to copy the file from
+the mount (GARFILEPTH) to the dropbox folder. Then it asks the user if
+they want to view the file in viking.
+
+TODO
+1. improve robustness by checking for viking on system. (answer
+might be here
+http://stackoverflow.com/questions/775351/os-path-exists-for-files-in-your-path)
+
+2. Include options to step back or exit?
+
+
+
+
+
