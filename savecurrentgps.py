@@ -89,17 +89,6 @@ def welcomescreen(screen, y, x):
     return
 
 
-def adviseprocess(screen, y, x, newfilepath):
-    screen.clear()
-    screen.border(0)
-    screen.addstr(y, x, "Also created processed file as")
-    screen.addstr(y + 1, x, newfilepath)
-    screen.addstr(y + 3, x, "Press any key to continue")
-    screen.refresh()
-    screen.getch()
-    return
-
-
 def gpspresent(screen, y, x, GARMNTPT):
     """
     if GPS not plugged in, end script giving user instructions
@@ -148,10 +137,7 @@ def exitscreen(screen, y, x):
     screen.clear()
     screen.border(0)
     screen.addstr(y, x, "Copied data from GPS and created a preprocessed file")
-    screen.addstr(y + 2, x, "After checking the result is what you expected\
- in Viking or similar,")
-    screen.addstr(y + 3, x, "you can safely unplug the GPS, turn it on and\
- erase the tracks to clear it.")
+    screen.addstr(y + 2, x, "Script ends successfully here")
     screen.addstr(y + 5, x, "Press any key to exit")
     screen.refresh()
     screen.getch()
@@ -287,7 +273,7 @@ def main():
     processedfilepath = os.path.join(preprocesslocation,
                                      os.path.basename(newfilepath))
     processedfilepath = "%s_pp.gpx" % (os.path.splitext(processedfilepath)[0])
-    adviseprocess(screen, y, x, processedfilepath)
+    # adviseprocess(screen, y, x, processedfilepath)
 
     # offer the user the option of opening file in Viking
     vikingoption(screen, y, x, processedfilepath)
