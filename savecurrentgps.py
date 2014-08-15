@@ -130,6 +130,27 @@ def asksophdan(screen, y, x):
             return 'dan'
 
 
+def checksophdan(screen, y, x, name):
+    """
+    confirm the answer to the asksophdan question
+    """
+    screen.clear()
+    screen.border(0)
+    screen.addstr(y, x, "You said that it is %s's GPS" % (name))
+    screen.addstr(y + 3, x, "Is this correct?")
+    screen.addstr(y + 5, x, "Y", curses.A_UNDERLINE)
+    screen.addstr(y + 5, x + 1, "es/")
+    screen.addstr(y + 5, x + 4, "N", curses.A_UNDERLINE)
+    screen.addstr(y + 5, x + 5, "o?")
+    screen.refresh()
+    while 1:
+        answer = screen.getch()
+        if answer in [ord('Y'), ord('y')]:
+            return True
+        elif answer in [ord('N'), ord('n')]:
+            return False
+
+
 def exitscreen(screen, y, x):
     """
     last screen
@@ -253,7 +274,11 @@ def main():
     gpspresent(screen, y, x, GARMNTPT)
 
     # ask if the GPS is Soph's or Dan's
-    name = asksophdan(screen, y, x)
+    while 1:
+        name = asksophdan(screen, y, x)
+        confirm = checksophdan(screen, y, x, name)
+        if confirm:
+            break
 
     # silently query relevant dropbox folder for last saved name and
     # make new name, adding one to final number in filename
