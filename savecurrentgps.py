@@ -29,7 +29,8 @@ import sys
 import os
 import subprocess
 import ConfigParser
-from shutil import copy2, make_archive
+import tarfile
+from shutil import copy2
 from glob import glob
 
 
@@ -42,15 +43,16 @@ def makenewfilename(dropboxlocation, dropboxoriginal, name, CURYEAR):
                                dropboxoriginal)
 
     # look in directory and find latest filename in order to increment
-    filelist = glob(os.path.join(gpxfilepath, '*.gpx'))
+    filelist = glob(os.path.join(gpxfilepath, '*.*'))
     if filelist == []:
         # it might be a new year and the directory is empty
         newnum = '01'
     else:
         lastfile = sorted(filelist)[-1]
         # split last filename and increment number for filename
-        lastfile = os.path.splitext(lastfile)[0]
+        # lastfile = os.path.splitext(lastfile)[0]
         filenum = lastfile[lastfile.rfind('-') + 1:]
+        filenum = filenum[:filenum.find('.')]
         newnum = '%02d' % (int(filenum) + 1)
 
     # make user character for filename generation from answer
@@ -276,6 +278,7 @@ def main():
         = getsettings(settingspath)
 
     dropboxlocation = os.path.expanduser(dropboxlocation)
+    tempfilelocation = os.path.expanduser(tempfilelocation)
 
     # Check screen
     welcomescreen(screen, y, x)
@@ -297,15 +300,21 @@ def main():
                                                name, CURYEAR)
 
     # copy GPX file from GPS using newfilepath as destination
+    tempgpxfile = os.path.join(tempfilelocation, newfilename)
     copy2(os.path.join(GARMNTPT, garminfilelocation),
-          os.path.join(tempfilelocation, newfilename))
+          tempgpxfile)
+
+    # compress and save this file to location for 'original' files
+    compressfilebase = os.path.splitext(newfilepath)[0]
+    with tarfile.open(compressfilebase + '.tar.gz', 'w:gz') as compressgpxfile:
+        compressgpxfile.add(tempgpxfile)
 
     # evoke preprocessGPX on copied file, make file paths and tell
     # user
     preprocesslocation = os.path.join(os.path.dirname
                                       (os.path.dirname(newfilepath)),
                                       dropboxpreprocessed)
-    preprocess(newfilepath, preprocesslocation)
+    preprocess(tempgpxfile, preprocesslocation)
     processedfilepath = os.path.join(preprocesslocation,
                                      os.path.basename(newfilepath))
     processedfilepath = "%s_pp.gpx" % (os.path.splitext(processedfilepath)[0])
