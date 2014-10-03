@@ -29,7 +29,7 @@ import sys
 import os
 import subprocess
 import ConfigParser
-from shutil import copy2
+from shutil import copy2, make_archive
 from glob import glob
 
 
@@ -70,7 +70,13 @@ def initcurses():
     screen = curses.initscr()
     curses.noecho()
     curses.cbreak()
-    curses.curs_set(0)
+    try:
+        curses.curs_set(0)
+    except curses.error:
+        print
+        print "Can't start ncurses. Is this a bash terminal?"
+        print
+        sys.exit()
     # set offsets for text screens following
     y = 2
     x = 3
@@ -250,8 +256,9 @@ def getsettings(path):
     dropboxlocation = config.get('core', 'dropboxlocation')
     dropboxoriginal = config.get('core', 'dropboxoriginal')
     dropboxpreprocessed = config.get('core', 'dropboxpreprocessed')
+    tempfilelocation = config.get('core', 'tempfilelocation')
     return GARMNTPT, garminfilelocation, CURYEAR, dropboxlocation,\
-        dropboxoriginal, dropboxpreprocessed
+        dropboxoriginal, dropboxpreprocessed, tempfilelocation
 
 
 def main():
@@ -265,7 +272,8 @@ def main():
     checksettings(settingspath, screen, y, x)
     # load settings
     GARMNTPT, garminfilelocation, CURYEAR, dropboxlocation,\
-        dropboxoriginal, dropboxpreprocessed = getsettings(settingspath)
+        dropboxoriginal, dropboxpreprocessed, tempfilelocation\
+        = getsettings(settingspath)
 
     dropboxlocation = os.path.expanduser(dropboxlocation)
 
@@ -289,7 +297,8 @@ def main():
                                                name, CURYEAR)
 
     # copy GPX file from GPS using newfilepath as destination
-    copy2(GARMNTPT + garminfilelocation, newfilepath)
+    copy2(os.path.join(GARMNTPT, garminfilelocation),
+          os.path.join(tempfilelocation, newfilename))
 
     # evoke preprocessGPX on copied file, make file paths and tell
     # user
