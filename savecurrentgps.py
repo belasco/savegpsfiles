@@ -18,9 +18,9 @@ TODO
 might be here
 http://stackoverflow.com/questions/775351/os-path-exists-for-files-in-your-path)
 
-2. Compress original file to save space
+2. Include options to step back or exit?
 
-3. Include options to step back or exit?
+3. Don't need garminmountpoint AND garminfilelocation
 
 """
 
@@ -50,7 +50,6 @@ def makenewfilename(dropboxlocation, dropboxoriginal, name, CURYEAR):
     else:
         lastfile = sorted(filelist)[-1]
         # split last filename and increment number for filename
-        # lastfile = os.path.splitext(lastfile)[0]
         filenum = lastfile[lastfile.rfind('-') + 1:]
         filenum = filenum[:filenum.find('.')]
         newnum = '%02d' % (int(filenum) + 1)
