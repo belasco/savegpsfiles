@@ -134,9 +134,9 @@ def asksophdan(screen, y, x):
     while 1:
         answer = screen.getch()
         if answer in [ord('S'), ord('s')]:
-            return 'soph'
+            return 'Soph'
         if answer in [ord('D'), ord('d')]:
-            return 'dan'
+            return 'Dan'
 
 
 def checksophdan(screen, y, x, name):
