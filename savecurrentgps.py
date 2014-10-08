@@ -38,6 +38,7 @@ def makenewfilename(dropboxlocation, dropboxoriginal, name, CURYEAR):
     """
     generate a filename and path for the destination GPX file
     """
+    name = name.lower()
     # find location of current GPS files on user's machine
     gpxfilepath = os.path.join(dropboxlocation, name + CURYEAR,
                                dropboxoriginal)
