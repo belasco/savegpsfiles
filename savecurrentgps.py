@@ -29,7 +29,7 @@ import sys
 import os
 import subprocess
 import ConfigParser
-import tarfile
+import gzip
 from shutil import copy2
 from glob import glob
 
@@ -305,9 +305,8 @@ def main():
           tempgpxfile)
 
     # compress and save this file to location for 'original' files
-    compressfilebase = os.path.splitext(newfilepath)[0]
-    with tarfile.open(compressfilebase + '.tar.gz', 'w:gz') as compressgpxfile:
-        compressgpxfile.add(tempgpxfile)
+    with gzip.open(newfilepath + '.gz', 'wb') as compressgpxfile:
+        compressgpxfile.write(tempgpxfile)
 
     # evoke preprocessGPX on copied file, make file paths and tell
     # user
