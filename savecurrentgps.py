@@ -305,8 +305,13 @@ def main():
           tempgpxfile)
 
     # compress and save this file to location for 'original' files
-    with gzip.open(newfilepath + '.gz', 'wb') as compressgpxfile:
-        compressgpxfile.write(tempgpxfile)
+    # with gzip.open(newfilepath + '.gz', 'wb') as compressgpxfile:
+    #     compressgpxfile.write(tempgpxfile)
+    tempgpxfileobj = open(tempgpxfile, 'rb')
+    compressgpxfile = gzip.open(newfilepath + '.gz', 'wb')
+    compressgpxfile.writelines(tempgpxfileobj)
+    compressgpxfile.close()
+    tempgpxfileobj.close()
 
     # evoke preprocessGPX on copied file, make file paths and tell
     # user
