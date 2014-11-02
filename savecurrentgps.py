@@ -18,9 +18,7 @@ TODO
 might be here
 http://stackoverflow.com/questions/775351/os-path-exists-for-files-in-your-path)
 
-2. Include options to step back or exit?
-
-3. Don't need garminmountpoint AND garminfilelocation
+2. Don't need garminmountpoint AND garminfilelocation.
 
 """
 
