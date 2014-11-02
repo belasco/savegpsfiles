@@ -253,13 +253,12 @@ def getsettings(path):
     config = ConfigParser.RawConfigParser()
     config.read(path)
     CURYEAR = config.get('core', 'currentyear')
-    GARMNTPT = config.get('core', 'garminmountpoint')
     garminfilelocation = config.get('core', 'garminfilelocation')
     dropboxlocation = config.get('core', 'dropboxlocation')
     dropboxoriginal = config.get('core', 'dropboxoriginal')
     dropboxpreprocessed = config.get('core', 'dropboxpreprocessed')
     tempfilelocation = config.get('core', 'tempfilelocation')
-    return GARMNTPT, garminfilelocation, CURYEAR, dropboxlocation,\
+    return garminfilelocation, CURYEAR, dropboxlocation,\
         dropboxoriginal, dropboxpreprocessed, tempfilelocation
 
 
@@ -273,7 +272,7 @@ def main():
     settingspath = os.path.expanduser('~/bin/settings.cfg')
     checksettings(settingspath, screen, y, x)
     # load settings
-    GARMNTPT, garminfilelocation, CURYEAR, dropboxlocation,\
+    garminfilelocation, CURYEAR, dropboxlocation,\
         dropboxoriginal, dropboxpreprocessed, tempfilelocation\
         = getsettings(settingspath)
 
@@ -284,7 +283,7 @@ def main():
     welcomescreen(screen, y, x)
 
     # Check gps plugged in
-    gpspresent(screen, y, x, GARMNTPT)
+    gpspresent(screen, y, x, garminfilelocation)
 
     # ask if the GPS is Soph's or Dan's
     while 1:
@@ -301,8 +300,7 @@ def main():
 
     # copy GPX file from GPS using newfilepath as destination
     tempgpxfile = os.path.join(tempfilelocation, newfilename)
-    copy2(os.path.join(GARMNTPT, garminfilelocation),
-          tempgpxfile)
+    copy2(garminfilelocation, tempgpxfile)
 
     # compress and save this file to location for 'original' files
     with open(tempgpxfile, 'rb') as tempgpxfileobj:
