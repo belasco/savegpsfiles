@@ -18,8 +18,6 @@ TODO
 might be here
 http://stackoverflow.com/questions/775351/os-path-exists-for-files-in-your-path)
 
-2. Don't need garminmountpoint AND garminfilelocation.
-
 """
 
 import curses
@@ -263,11 +261,11 @@ def getsettings(path):
 def main():
     """
     """
-    # initialise screen
     screen, y, x = initcurses()
 
-    # check settings
-    settingspath = os.path.expanduser('~/bin/settings.cfg')
+    # current directory of script to find settings
+    curdir = os.path.dirname(__file__)
+    settingspath = os.path.expanduser(os.path.join(curdir, 'settings.cfg'))
     checksettings(settingspath, screen, y, x)
     # load settings
     garminfilelocation, CURYEAR, dropboxlocation,\
@@ -277,10 +275,8 @@ def main():
     dropboxlocation = os.path.expanduser(dropboxlocation)
     tempfilelocation = os.path.expanduser(tempfilelocation)
 
-    # Check screen
     welcomescreen(screen, y, x)
 
-    # Check gps plugged in
     gpspresent(screen, y, x, garminfilelocation)
 
     # ask if the GPS is Soph's or Dan's
@@ -314,13 +310,10 @@ def main():
     processedfilepath = os.path.join(preprocesslocation,
                                      os.path.basename(newfilepath))
     processedfilepath = "%s_pp.gpx" % (os.path.splitext(processedfilepath)[0])
-    # adviseprocess(screen, y, x, processedfilepath)
 
     # offer the user the option of opening file in Viking
     vikingoption(screen, y, x, processedfilepath)
 
-    # exit, advising user to check GPX file in Viking and then erase
-    # the data from the GPS
     exitscreen(screen, y, x)
 
 if __name__ == '__main__':
