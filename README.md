@@ -23,12 +23,16 @@ The utility script GPSfilestruct.sh creates the expected file
 structure using our defaults of two users ('dan' and 'soph') having
 three subfolders in each user folder as follows, where YYYY is the
 year in four figures (i.e. 2015):
-     /currentGPS
-        /danYYYY
-            /1_original
-            /2_preprocessed
-            /3_cleaned
-        /sophYYYY
-            /1_original
-            /2_preprocessed
-            /3_cleaned
+<pre>
+currentGPS/
+├──   dan2015
+│   ├──   1_original
+│   │   └──   2015-D-01.gpx.gz
+│   ├──   2_preprocessed
+│   │   └──   2015-D-01_pp.gpx
+│   └──   3_cleaned
+└──   soph2015
+    ├──   1_original
+    ├──   2_preprocessed
+    └──   3_cleaned
+</pre>
