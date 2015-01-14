@@ -27,9 +27,7 @@ year in four figures (i.e. 2015):
 currentGPS/
 ├──   dan2015
 │   ├──   1_original
-│   │   └──   2015-D-01.gpx.gz
 │   ├──   2_preprocessed
-│   │   └──   2015-D-01_pp.gpx
 │   └──   3_cleaned
 └──   soph2015
     ├──   1_original
