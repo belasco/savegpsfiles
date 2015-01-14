@@ -2,7 +2,7 @@
 
 # Create a currentGPS directory structure in location supplied as a
 # first argument. Second argument is the year required i.e. the
-# current year or next year. 
+# current year or next year.
 
 version="0.1"
 user1="dan"
