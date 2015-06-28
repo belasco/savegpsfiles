@@ -12,8 +12,9 @@ usemessage(){
     # see here for why printf is better than echo
     # http://stackoverflow.com/questions/10576571/how-to-make-echo-interpret-backslash-escapes-and-not-print-a-trailing-newline
     printf "\nCreate a directory structure to save GPX files in\n"
-    printf "Usage: $0 location year\n"
-    printf "Where location is the directory to make the file structure in\n"
+    printf "Usage: $0 path year\n"
+    printf "Where path is the directory to make the file structure in\n"
+    printf "(currently this is selectedplanbfiles/currentGPS)\n"
     printf "and year is the (current or next) year in question\n\n"
 }
 
