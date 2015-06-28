@@ -61,26 +61,6 @@ def makenewfilename(dropboxlocation, dropboxoriginal, name, CURYEAR):
     return newfilename, newfilepath
 
 
-def initcurses():
-    """
-    """
-    # start ncurses screen
-    screen = curses.initscr()
-    curses.noecho()
-    curses.cbreak()
-    try:
-        curses.curs_set(0)
-    except curses.error:
-        print
-        print "Can't start ncurses. Is this a bash terminal?"
-        print
-        sys.exit()
-    # set offsets for text screens following
-    y = 2
-    x = 3
-    return screen, y, x
-
-
 def welcomescreen(screen, y, x):
     """
     start the programme with a reminder to plug gps in
@@ -258,10 +238,11 @@ def getsettings(path):
         dropboxoriginal, dropboxpreprocessed, tempfilelocation
 
 
-def main():
+def main(screen):
     """
     """
-    screen, y, x = initcurses()
+    y = 2
+    x = 3
 
     # current directory of script to find settings
     curdir = os.path.dirname(__file__)
@@ -317,4 +298,4 @@ def main():
     exitscreen(screen, y, x)
 
 if __name__ == '__main__':
-    curses.wrapper(main())
+    curses.wrapper(main)
