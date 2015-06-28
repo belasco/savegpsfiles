@@ -241,6 +241,7 @@ def getsettings(path):
 def main(screen):
     """
     """
+    # offsets for text
     y = 2
     x = 3
 
