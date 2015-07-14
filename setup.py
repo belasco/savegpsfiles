@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 """
@@ -13,6 +13,8 @@ try:
 except ImportError:
     from distutils.core import setup
 
+from savecurrentgps import __version__
+
 
 def readme():
     with open('README.md') as readme_file:
@@ -20,11 +22,13 @@ def readme():
 
 
 setup(name='savecurrentgps',
+      description='savecurrentgps',
+      long_description=readme(),
       author='Daniel Belasco Rogers',
       author_email='danbelasco@yahoo.co.uk',
-      version='1.0',
+      # url='https://github.com/belasco/savecurrentgps',
+      # download_url='https://github.com/ptrv/gpx2spatialite',
+      version=__version__,
       py_modules=['savecurrentgps'],
-      long_description=readme(),
-      description='Copy the current gpx file from a Garmin Etrex \
-into the directory in settings.cfg',
+      install_requires=['viking', 'preprocessGPX'],
       license='GPLv3')
