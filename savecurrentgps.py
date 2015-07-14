@@ -29,6 +29,7 @@ import gzip
 from shutil import copy2
 from glob import glob
 
+__version__ = '0.2'
 
 def makenewfilename(dropboxlocation, dropboxoriginal, name, CURYEAR):
     """
