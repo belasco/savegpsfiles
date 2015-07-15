@@ -112,7 +112,7 @@ def asksophdan(screen, y, x):
 
 def checksophdan(screen, y, x, name):
     """
-    confirm the answer to the asksophdan question
+    confirm the answer to the asksopnhdan question
     """
     screen.clear()
     screen.border(0)
@@ -218,7 +218,7 @@ def checksettings(settingspath, screen, y, x):
 
 def getsettings(path):
     """
-    get settings from an external settings file
+    get settings from the external settings file
     """
     config = ConfigParser.RawConfigParser()
     config.read(path)
@@ -228,32 +228,52 @@ def getsettings(path):
     dropboxoriginal = config.get('core', 'dropboxoriginal')
     dropboxpreprocessed = config.get('core', 'dropboxpreprocessed')
     tempfilelocation = config.get('core', 'tempfilelocation')
+
+    # if path features tildes, expand these
+    dropboxlocation = os.path.expanduser(dropboxlocation)
+    tempfilelocation = os.path.expanduser(tempfilelocation)
+
     return garminfilelocation, CURYEAR, dropboxlocation,\
         dropboxoriginal, dropboxpreprocessed, tempfilelocation
 
 
-def main(screen):
+def getsettingspath():
     """
+    find settings in current dir of this script and capture non
+    existence- this location may change
     """
-    # offsets for text
-    y = 2
-    x = 3
-
-    # current directory of script to find settings
     curdir = os.path.dirname(__file__)
     settingspath = os.path.expanduser(os.path.join(curdir, 'settings.cfg'))
-    checksettings(settingspath, screen, y, x)
-    # load settings
+
+    if not os.path.exists(settingspath):
+        print "Error: Settings file not found at %s" % settingspath
+        print
+        sys.exit(2)
+
+    return settingspath
+
+
+def checkgarminmount(garminfilelocation):
+
+    if not os.path.exists(garminfilelocation):
+        print "Error: GPS not found at %s" % garminfilelocation
+        print
+        sys.exit(2)
+
+    return
+
+
+def main():
+    """
+    """
+    settingspath = getsettingspath()
+
+    # read settings
     garminfilelocation, CURYEAR, dropboxlocation,\
         dropboxoriginal, dropboxpreprocessed, tempfilelocation\
         = getsettings(settingspath)
 
-    dropboxlocation = os.path.expanduser(dropboxlocation)
-    tempfilelocation = os.path.expanduser(tempfilelocation)
-
-    welcomescreen(screen, y, x)
-
-    gpspresent(screen, y, x, garminfilelocation)
+    checkgarminmount(garminfilelocation)
 
     # ask if the GPS is Soph's or Dan's
     while 1:
@@ -293,4 +313,4 @@ def main(screen):
     exitscreen(screen, y, x)
 
 if __name__ == '__main__':
-    curses.wrapper(main)
+    sys.exit(main)
