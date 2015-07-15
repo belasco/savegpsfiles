@@ -1,22 +1,14 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-"""savecurrentgpsncurses.py
-2013/02/06 21:58:17 Daniel Belasco Rogers dan@planbperformance.net
+"""savecurrentgps.py
+Daniel Belasco Rogers dan@planbperformance.net
 
-This is an adaptation of savecurrentgps.py
+Wed 15 Jul 2015 17:38:21 CEST 
 
-The script is to automate the process of saving new gpx files.  It
-checks for the GPS, which should mount at GARMNTPT, looks in the
-user's dropbox location, finds the number of the last file, generates
-a new filename and uses this as the destination to copy the file from
-the mount (GARFILEPTH) to the dropbox folder. Then it asks the user if
-they want to view the file in viking.
-
-TODO
-1. improve robustness by checking for viking on system. (answer
-might be here
-http://stackoverflow.com/questions/775351/os-path-exists-for-files-in-your-path)
+Re-writing ncurses-based script to take back to bare essentials.
+Command line only with functions that could then be called by a gui
+if I build one later.
 
 """
 
@@ -29,7 +21,8 @@ import gzip
 from shutil import copy2
 from glob import glob
 
-__version__ = '0.2'
+__version__ = '0.3'
+
 
 def makenewfilename(dropboxlocation, dropboxoriginal, name, CURYEAR):
     """
