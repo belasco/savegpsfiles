@@ -55,39 +55,6 @@ def makenewfilename(dropboxlocation, dropboxoriginal, name, CURYEAR):
     return newfilename, newfilepath
 
 
-def welcomescreen(screen, y, x):
-    """
-    start the programme with a reminder to plug gps in
-    """
-    screen.clear()
-    screen.border(0)
-    screen.addstr(y, x, "Make sure your GPS is plugged in")
-    screen.addstr(y + 1, x, "and has finished making the GPX file")
-    screen.addstr(y + 3, x, "Then press any key to continue")
-    screen.refresh()
-    screen.getch()
-    return
-
-
-def gpspresent(screen, y, x, GARMNTPT):
-    """
-    if GPS not plugged in, end script giving user instructions
-    """
-    if not os.path.exists(GARMNTPT):
-        screen.clear()
-        screen.border(0)
-        screen.addstr(y, x, ("Error: GPS not found at %s" % GARMNTPT))
-        screen.addstr(y + 2, x, "Please plug in GPS and wait for it to finish saving data as GPX")
-        screen.addstr(y + 3, x, "Then run this script again")
-        screen.addstr(y + 5, x, "Press any key to exit")
-        screen.refresh()
-        curses.beep()
-        screen.getch()
-        curses.endwin()
-        sys.exit(2)
-    return
-
-
 def asksophdan(screen, y, x):
     """
     ask the user whether this is Soph's GPS or Dans and return answer
@@ -192,27 +159,6 @@ def preprocess(newfilepath, preprocesslocation):
         subprocess.Popen(['preprocessGPX', newfilepath, '-d',
                           preprocesslocation, '-c'],
                          stdout=fnull, stderr=fnull)
-    return
-
-
-def checksettings(settingspath, screen, y, x):
-    """
-    Check the user has the settings file installed and advise
-    """
-    if not os.path.exists(settingspath):
-        screen.clear()
-        screen.border(0)
-        screen.addstr(y, x, ("Error: Settings file not found at %s"
-                             % settingspath))
-        screen.addstr(y + 2, x, "Please link to the settings file")
-        screen.addstr(y + 3, x, "from the directory this script is run in")
-        screen.addstr(y + 4, x, "and try again")
-        screen.addstr(y + 6, x, "Press any key to exit")
-        screen.refresh()
-        curses.beep()
-        screen.getch()
-        curses.endwin()
-        sys.exit(2)
     return
 
 
