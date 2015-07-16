@@ -191,6 +191,18 @@ def makenewfilename(dropboxlocation, dropboxoriginal, name, CURYEAR):
     return newfilepath
 
 
+def copygpxfile(tempfilelocation, newfilepath, garminfilelocation):
+    """
+    copy the gpx file from garmin to a temp location and return the file path to it
+    """
+    newfilename = os.path.basename(newfilepath)   
+    tempgpxfile = os.path.join(tempfilelocation, newfilename)
+
+    copy2(garminfilelocation, tempgpxfile)
+
+    return tempgpxfile
+
+
 def main():
     """
     """
@@ -213,10 +225,8 @@ def main():
     newfilepath = makenewfilename(dropboxlocation,
                                   dropboxoriginal,
                                   name, CURYEAR)
-
-    # copy GPX file from GPS using newfilepath as destination
-    # tempgpxfile = os.path.join(tempfilelocation, newfilename)
-    # copy2(garminfilelocation, tempgpxfile)
+    
+    tempgpxfile = copygpxfile(tempfilelocation, newfilepath, garminfilelocation)
 
     # # compress and save this file to location for 'original' files
     # with open(tempgpxfile, 'rb') as tempgpxfileobj:
