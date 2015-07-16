@@ -19,40 +19,8 @@ import subprocess
 import ConfigParser
 import gzip
 from shutil import copy2
-from glob import glob
 
 __version__ = '0.3'
-
-
-def makenewfilename(dropboxlocation, dropboxoriginal, name, CURYEAR):
-    """
-    generate a filename and path for the destination GPX file
-    """
-    name = name.lower()
-    # find location of current GPS files on user's machine
-    gpxfilepath = os.path.join(dropboxlocation, name + CURYEAR,
-                               dropboxoriginal)
-
-    # look in directory and find latest filename in order to increment
-    filelist = glob(os.path.join(gpxfilepath, '*.*'))
-    if filelist == []:
-        # it might be a new year and the directory is empty
-        newnum = '01'
-    else:
-        lastfile = sorted(filelist)[-1]
-        # split last filename and increment number for filename
-        filenum = lastfile[lastfile.rfind('-') + 1:]
-        filenum = filenum[:filenum.find('.')]
-        newnum = '%02d' % (int(filenum) + 1)
-
-    # make user character for filename generation from answer
-    userchar = name[0].upper()
-
-    # put it all together and return filepath
-    newfilename = "%s-%s-%s.gpx" % (CURYEAR, userchar, newnum)
-    newfilepath = os.path.join(gpxfilepath, newfilename)
-
-    return newfilename, newfilepath
 
 
 def exitscreen(screen, y, x):
@@ -192,6 +160,37 @@ def asksophdan():
             print
 
 
+def makenewfilename(dropboxlocation, dropboxoriginal, name, CURYEAR):
+    """
+    generate a filename and path for the destination GPX file
+    """
+    # find location of current GPS files on user's machine
+    gpxfilepath = os.path.join(dropboxlocation, name + CURYEAR,
+                               dropboxoriginal)
+
+    # look in directory and find latest filename in order to increment
+    filelist = os.listdir(gpxfilepath)
+
+    if filelist == []:
+        # it might be a new year and the directory is empty
+        newnum = '01'
+    else:
+        lastfile = sorted(filelist)[-1]
+        # split last filename and increment number for filename
+        filenum = lastfile[lastfile.rfind('-') + 1:]
+        filenum = filenum[:filenum.find('.')]
+        newnum = '%02d' % (int(filenum) + 1)
+
+    # make user character for filename generation from answer
+    userchar = name[0].upper()
+
+    # put it all together and return filepath
+    newfilename = "%s-%s-%s.gpx" % (CURYEAR, userchar, newnum)
+    newfilepath = os.path.join(gpxfilepath, newfilename)
+
+    return newfilepath
+
+
 def main():
     """
     """
@@ -211,10 +210,10 @@ def main():
 
     # silently query relevant dropbox folder for last saved name and
     # make new name, adding one to final number in filename
-    newfilename, newfilepath = makenewfilename(dropboxlocation,
-                                               dropboxoriginal,
-                                               name, CURYEAR)
-    print newfilename, newfilepath
+    newfilepath = makenewfilename(dropboxlocation,
+                                  dropboxoriginal,
+                                  name, CURYEAR)
+
     # copy GPX file from GPS using newfilepath as destination
     # tempgpxfile = os.path.join(tempfilelocation, newfilename)
     # copy2(garminfilelocation, tempgpxfile)
