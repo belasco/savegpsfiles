@@ -104,6 +104,10 @@ def checkgarminmount(garminfilelocation):
         print "Error:"
         print "GPS not found at %s" % garminfilelocation
         print
+        print "Check that the GPS is plugged in"
+        print "and has finished making GPX file"
+        print "then try again."
+        print
         sys.exit(2)
 
     print "GPS found"
@@ -196,7 +200,7 @@ def main():
 
     # check to see if the garmin is mounted at the expected
     # location (see settings)
-    #checkgarminmount(garminfilelocation)
+    checkgarminmount(garminfilelocation)
 
     # ask if the GPS is Soph's or Dan's
     name = asksophdan()
