@@ -23,35 +23,6 @@ from shutil import copy2
 __version__ = '0.3'
 
 
-def exitscreen(screen, y, x):
-    """
-    last screen
-    """
-    screen.clear()
-    screen.border(0)
-    screen.addstr(y, x, "Copied data from GPS and created a preprocessed file")
-    screen.addstr(y + 2, x, "Script ends successfully here")
-    screen.addstr(y + 5, x, "Press any key to exit")
-    screen.refresh()
-    screen.getch()
-    curses.endwin()
-    sys.exit()
-
-
-def noviking(screen, y, x):
-    """
-    Report to the user that Viking isn't on the current system
-    """
-    screen.clear()
-    screen.border(0)
-    screen.addstr(y, x, "You don't seem to have Viking installed on your system")
-    screen.addstr(y + 1, x, "Try sudo apt-get install viking")
-    screen.addstr(y + 5, x, "Press any key to exit")
-    screen.refresh()
-    screen.getch
-    return
-
-
 def vikingoption(screen, y, x, newfilepath):
     """
     Offer the user the option to open the file in Viking.
@@ -195,12 +166,22 @@ def copygpxfile(tempfilelocation, newfilepath, garminfilelocation):
     """
     copy the gpx file from garmin to a temp location and return the file path to it
     """
-    newfilename = os.path.basename(newfilepath)   
+    newfilename = os.path.basename(newfilepath)
     tempgpxfile = os.path.join(tempfilelocation, newfilename)
 
     copy2(garminfilelocation, tempgpxfile)
 
     return tempgpxfile
+
+
+def savecompress(tempgpxfile, newfilepath):
+    """
+    compress and save this file to location for 'original' files
+    """
+
+    with open(tempgpxfile, 'rb') as tempgpxfileobj:
+        with gzip.open(newfilepath + '.gz', 'wb') as compressgpxfile:
+            compressgpxfile.writelines(tempgpxfileobj)
 
 
 def main():
@@ -225,13 +206,13 @@ def main():
     newfilepath = makenewfilename(dropboxlocation,
                                   dropboxoriginal,
                                   name, CURYEAR)
-    
-    tempgpxfile = copygpxfile(tempfilelocation, newfilepath, garminfilelocation)
 
-    # # compress and save this file to location for 'original' files
-    # with open(tempgpxfile, 'rb') as tempgpxfileobj:
-    #     with gzip.open(newfilepath + '.gz', 'wb') as compressgpxfile:
-    #         compressgpxfile.writelines(tempgpxfileobj)
+    tempgpxfile = copygpxfile(tempfilelocation,
+                              newfilepath,
+                              garminfilelocation)
+
+    print "Saving GPX file from Garmin as a compressed file in %s" % dropboxoriginal
+    savecompress(tempgpxfile, newfilepath)
 
     # # evoke preprocessGPX on copied file, make file paths and tell
     # # user
