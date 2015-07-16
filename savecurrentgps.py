@@ -55,49 +55,6 @@ def makenewfilename(dropboxlocation, dropboxoriginal, name, CURYEAR):
     return newfilename, newfilepath
 
 
-def asksophdan(screen, y, x):
-    """
-    ask the user whether this is Soph's GPS or Dans and return answer
-    """
-    screen.clear()
-    screen.border(0)
-    screen.addstr(y, 2, "GPS found")
-    screen.addstr(y + 1, 2, "Is this Soph's GPS or Dan's?...")
-    screen.addstr(y + 3, x + 2, "S", curses.A_UNDERLINE)
-    screen.addstr(y + 3, x + 3, "oph's GPS")
-    screen.addstr(y + 4, x + 2, "D", curses.A_UNDERLINE)
-    screen.addstr(y + 4, x + 3, "an's GPS")
-    screen.addstr(y + 6, x + 2, "(Press 'D' or 'S')")
-    screen.refresh()
-    while 1:
-        answer = screen.getch()
-        if answer in [ord('S'), ord('s')]:
-            return 'Soph'
-        if answer in [ord('D'), ord('d')]:
-            return 'Dan'
-
-
-def checksophdan(screen, y, x, name):
-    """
-    confirm the answer to the asksopnhdan question
-    """
-    screen.clear()
-    screen.border(0)
-    screen.addstr(y, x, "You said that it is %s's GPS" % (name))
-    screen.addstr(y + 3, x, "Is this correct?")
-    screen.addstr(y + 5, x, "Y", curses.A_UNDERLINE)
-    screen.addstr(y + 5, x + 1, "es/")
-    screen.addstr(y + 5, x + 4, "N", curses.A_UNDERLINE)
-    screen.addstr(y + 5, x + 5, "o?")
-    screen.refresh()
-    while 1:
-        answer = screen.getch()
-        if answer in [ord('Y'), ord('y')]:
-            return True
-        elif answer in [ord('N'), ord('n')]:
-            return False
-
-
 def exitscreen(screen, y, x):
     """
     last screen
@@ -196,17 +153,43 @@ def getsettingspath():
         print
         sys.exit(2)
 
+    print "Loaded settings"
+    print
+
     return settingspath
 
 
 def checkgarminmount(garminfilelocation):
 
     if not os.path.exists(garminfilelocation):
-        print "Error: GPS not found at %s" % garminfilelocation
+        print "Error:"
+        print "GPS not found at %s" % garminfilelocation
         print
         sys.exit(2)
 
+    print "GPS found"
+    print
+
     return
+
+
+def asksophdan():
+    """
+    ask the user whether this is Soph's GPS or Dan's and return the
+    answer as 'name'
+    """
+    name = ""
+
+    while 1:
+        name = raw_input("Is this Soph's GPS or Dan's [s/d]? ")
+        name = name.lower()
+        if name == 's':
+            return 'soph'
+        elif name == 'd':
+            return 'dan'
+        else:
+            print "Please answer 's' or 'd' for Soph or Dan..."
+            print
 
 
 def main():
@@ -219,44 +202,42 @@ def main():
         dropboxoriginal, dropboxpreprocessed, tempfilelocation\
         = getsettings(settingspath)
 
-    checkgarminmount(garminfilelocation)
+    # check to see if the garmin is mounted at the expected
+    # location (see settings)
+    #checkgarminmount(garminfilelocation)
 
     # ask if the GPS is Soph's or Dan's
-    while 1:
-        name = asksophdan(screen, y, x)
-        confirm = checksophdan(screen, y, x, name)
-        if confirm:
-            break
+    name = asksophdan()
 
     # silently query relevant dropbox folder for last saved name and
     # make new name, adding one to final number in filename
     newfilename, newfilepath = makenewfilename(dropboxlocation,
                                                dropboxoriginal,
                                                name, CURYEAR)
-
+    print newfilename, newfilepath
     # copy GPX file from GPS using newfilepath as destination
-    tempgpxfile = os.path.join(tempfilelocation, newfilename)
-    copy2(garminfilelocation, tempgpxfile)
+    # tempgpxfile = os.path.join(tempfilelocation, newfilename)
+    # copy2(garminfilelocation, tempgpxfile)
 
-    # compress and save this file to location for 'original' files
-    with open(tempgpxfile, 'rb') as tempgpxfileobj:
-        with gzip.open(newfilepath + '.gz', 'wb') as compressgpxfile:
-            compressgpxfile.writelines(tempgpxfileobj)
+    # # compress and save this file to location for 'original' files
+    # with open(tempgpxfile, 'rb') as tempgpxfileobj:
+    #     with gzip.open(newfilepath + '.gz', 'wb') as compressgpxfile:
+    #         compressgpxfile.writelines(tempgpxfileobj)
 
-    # evoke preprocessGPX on copied file, make file paths and tell
-    # user
-    preprocesslocation = os.path.join(os.path.dirname
-                                      (os.path.dirname(newfilepath)),
-                                      dropboxpreprocessed)
-    preprocess(tempgpxfile, preprocesslocation)
-    processedfilepath = os.path.join(preprocesslocation,
-                                     os.path.basename(newfilepath))
-    processedfilepath = "%s_pp.gpx" % (os.path.splitext(processedfilepath)[0])
+    # # evoke preprocessGPX on copied file, make file paths and tell
+    # # user
+    # preprocesslocation = os.path.join(os.path.dirname
+    #                                   (os.path.dirname(newfilepath)),
+    #                                   dropboxpreprocessed)
+    # preprocess(tempgpxfile, preprocesslocation)
+    # processedfilepath = os.path.join(preprocesslocation,
+    #                                  os.path.basename(newfilepath))
+    # processedfilepath = "%s_pp.gpx" % (os.path.splitext(processedfilepath)[0])
 
-    # offer the user the option of opening file in Viking
-    vikingoption(screen, y, x, processedfilepath)
+    # # offer the user the option of opening file in Viking
+    # vikingoption(screen, y, x, processedfilepath)
 
-    exitscreen(screen, y, x)
+    # exitscreen(screen, y, x)
 
 if __name__ == '__main__':
-    sys.exit(main)
+    sys.exit(main())
