@@ -66,17 +66,17 @@ def getsettings(path):
     config.read(path)
     CURYEAR = config.get('core', 'currentyear')
     garminfilelocation = config.get('core', 'garminfilelocation')
-    dropboxlocation = config.get('core', 'dropboxlocation')
-    dropboxoriginal = config.get('core', 'dropboxoriginal')
-    dropboxpreprocessed = config.get('core', 'dropboxpreprocessed')
+    basefilepath = config.get('core', 'basefilepath')
+    originaldirname = config.get('core', 'originaldirname')
+    preprocessdirname = config.get('core', 'preprocessdirname')
     tempfilelocation = config.get('core', 'tempfilelocation')
 
     # if path features tildes, expand these
-    dropboxlocation = os.path.expanduser(dropboxlocation)
+    basefilepath = os.path.expanduser(basefilepath)
     tempfilelocation = os.path.expanduser(tempfilelocation)
 
-    return garminfilelocation, CURYEAR, dropboxlocation,\
-        dropboxoriginal, dropboxpreprocessed, tempfilelocation
+    return garminfilelocation, CURYEAR, basefilepath,\
+        originaldirname, preprocessdirname, tempfilelocation
 
 
 def getsettingspath():
@@ -135,13 +135,13 @@ def asksophdan():
             print
 
 
-def makenewfilename(dropboxlocation, dropboxoriginal, name, CURYEAR):
+def makenewfilename(basefilepath, originaldirname, name, CURYEAR):
     """
     generate a filename and path for the destination GPX file
     """
     # find location of current GPS files on user's machine
-    gpxfilepath = os.path.join(dropboxlocation, name + CURYEAR,
-                               dropboxoriginal)
+    gpxfilepath = os.path.join(basefilepath, name + CURYEAR,
+                               originaldirname)
 
     # look in directory and find latest filename in order to increment
     filelist = os.listdir(gpxfilepath)
@@ -194,8 +194,8 @@ def main():
     settingspath = getsettingspath()
 
     # read settings
-    garminfilelocation, CURYEAR, dropboxlocation,\
-        dropboxoriginal, dropboxpreprocessed, tempfilelocation\
+    garminfilelocation, CURYEAR, basefilepath,\
+        originaldirname, preprocessdirname, tempfilelocation\
         = getsettings(settingspath)
 
     # check to see if the garmin is mounted at the expected
@@ -207,8 +207,8 @@ def main():
 
     # create the new file path using the various settings and
     # calculated values
-    newfilepath = makenewfilename(dropboxlocation,
-                                  dropboxoriginal,
+    newfilepath = makenewfilename(basefilepath,
+                                  originaldirname,
                                   name, CURYEAR)
 
     # copy the raw GPX file from the Garmin device to a temporary
@@ -217,14 +217,14 @@ def main():
                               newfilepath,
                               garminfilelocation)
 
-    print "Saving GPX file from Garmin as a compressed file in %s" % dropboxoriginal
+    print "Saving GPX file from Garmin as a compressed file in %s" % newfilepath
     savecompress(tempgpxfile, newfilepath)
 
     # # evoke preprocessGPX on copied file, make file paths and tell
     # # user
     # preprocesslocation = os.path.join(os.path.dirname
     #                                   (os.path.dirname(newfilepath)),
-    #                                   dropboxpreprocessed)
+    #                                   preprocessdirname)
     # preprocess(tempgpxfile, preprocesslocation)
     # processedfilepath = os.path.join(preprocesslocation,
     #                                  os.path.basename(newfilepath))
