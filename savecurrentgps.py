@@ -205,12 +205,14 @@ def main():
     # ask if the GPS is Soph's or Dan's
     name = asksophdan()
 
-    # silently query relevant dropbox folder for last saved name and
-    # make new name, adding one to final number in filename
+    # create the new file path using the various settings and
+    # calculated values
     newfilepath = makenewfilename(dropboxlocation,
                                   dropboxoriginal,
                                   name, CURYEAR)
 
+    # copy the raw GPX file from the Garmin device to a temporary
+    # folder
     tempgpxfile = copygpxfile(tempfilelocation,
                               newfilepath,
                               garminfilelocation)
