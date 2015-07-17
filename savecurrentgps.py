@@ -92,9 +92,6 @@ def getsettingspath():
         print()
         sys.exit(2)
 
-    print("Loaded settings")
-    print()
-
     return settingspath
 
 
@@ -109,9 +106,6 @@ def checkgarminmount(garminfilelocation):
         print("then try again.")
         print()
         sys.exit(2)
-
-    print("GPS found")
-    print()
 
     return
 
@@ -130,6 +124,10 @@ def asksophdan():
             return 'soph'
         elif name == 'd':
             return 'dan'
+        elif name == 'q':
+            print("You pressed q for Quit... Goodbye")
+            print()
+            sys.exit()
         else:
             print("Please answer 's' or 'd' for Soph or Dan...")
             print()
@@ -192,12 +190,16 @@ def savecompress(tempgpxfile, newfilepath):
 def askyesno(question):
     while 1:
         answer = input(question).lower()
-        if answer in ('y', 'yes', 'n', 'no'):
-            if answer in ('y', 'yes'):
-                answer = True
-            if answer in ('n', 'no'):
-                answer = False
-            return answer
+        if answer in ('y', 'yes'):
+            answer = True
+        elif answer in ('n', 'no'):
+            answer = False
+        elif answer == 'q':
+            print("You pressed q for Quit... Goodbye")
+            print()
+            sys.exit()
+        return answer
+
         print('Please answer y or n')
     return
 
@@ -208,12 +210,12 @@ def checkapplication(application):
     checkapp = which(application)
 
     if checkapp:
-        return
+        return checkapp
     else:
         print("**[Warning]**")
         print("An application that this script needs:")
         print(application)
-        print("was not found on your system")
+        print("...was not found on your system")
         print()
         print("You will be able to save a compressed copy of the GPX file,")
         if application == "preprocessGPX":
@@ -230,30 +232,30 @@ def checkapplication(application):
             sys.exit(0)
 
     return        
-    
 
 
-            
 def main():
     """
     """
     settingspath = getsettingspath()
-
+    print()
+    print("Loaded settings")
+    
     # read settings
     garminfilelocation, CURYEAR, basefilepath,\
         originaldirname, preprocessdirname, tempfilelocation\
         = getsettings(settingspath)
 
-    # check to see if the garmin is mounted at the expected
-    # location (see settings)
     checkgarminmount(garminfilelocation)
+    print("GPS found")
+    print()
 
     # check for the auxiliary programmes this script may need and
-    # inform the user if not found
-    checkapplication("preprocessGPX")
-    checkapplication("viking")
-    
-    # ask if the GPS is Soph's or Dan's
+    # inform the user if not found. Return the location of the
+    # found script for later subprocess calls
+    preprocessbin = checkapplication("preprocessGPX")
+    vikingbin = checkapplication("viking")
+
     name = asksophdan()
 
     # create the new file path using the various settings and
@@ -268,6 +270,7 @@ def main():
                               newfilepath,
                               garminfilelocation)
 
+    print()
     print("Saving GPX file from Garmin as a compressed file in %s" % newfilepath)
     savecompress(tempgpxfile, newfilepath)
 
@@ -284,7 +287,6 @@ def main():
     # # offer the user the option of opening file in Viking
     # vikingoption(screen, y, x, processedfilepath)
 
-    # exitscreen(screen, y, x)
 
 if __name__ == '__main__':
     sys.exit(main())
