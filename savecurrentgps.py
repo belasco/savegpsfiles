@@ -102,7 +102,7 @@ def checkgarminmount(garminfilelocation):
 
     if not os.path.exists(garminfilelocation):
         print "Error:"
-        print "GPS not found at %s" % garminfilelocation
+        print "No GPS found at %s" % garminfilelocation
         print
         print "Check that the GPS is plugged in"
         print "and has finished making GPX file"
