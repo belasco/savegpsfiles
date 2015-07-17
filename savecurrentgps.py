@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """savecurrentgps.py
@@ -16,7 +16,7 @@ import curses
 import sys
 import os
 import subprocess
-import ConfigParser
+import configparser
 import gzip
 from shutil import copy2
 
@@ -62,7 +62,7 @@ def getsettings(path):
     """
     get settings from the external settings file
     """
-    config = ConfigParser.RawConfigParser()
+    config = configparser.RawConfigParser()
     config.read(path)
     CURYEAR = config.get('core', 'currentyear')
     garminfilelocation = config.get('core', 'garminfilelocation')
@@ -88,12 +88,12 @@ def getsettingspath():
     settingspath = os.path.expanduser(os.path.join(curdir, 'settings.cfg'))
 
     if not os.path.exists(settingspath):
-        print "Error: Settings file not found at %s" % settingspath
-        print
+        print("Error: Settings file not found at %s" % settingspath)
+        print()
         sys.exit(2)
 
-    print "Loaded settings"
-    print
+    print("Loaded settings")
+    print()
 
     return settingspath
 
@@ -101,17 +101,17 @@ def getsettingspath():
 def checkgarminmount(garminfilelocation):
 
     if not os.path.exists(garminfilelocation):
-        print "Error:"
-        print "No GPS found at %s" % garminfilelocation
-        print
-        print "Check that the GPS is plugged in"
-        print "and has finished making GPX file"
-        print "then try again."
-        print
+        print("Error:")
+        print("No GPS found at %s" % garminfilelocation)
+        print()
+        print("Check that the GPS is plugged in")
+        print("and has finished making GPX file")
+        print("then try again.")
+        print()
         sys.exit(2)
 
-    print "GPS found"
-    print
+    print("GPS found")
+    print()
 
     return
 
@@ -124,15 +124,15 @@ def asksophdan():
     name = ""
 
     while 1:
-        name = raw_input("Is this Soph's GPS or Dan's [s/d]? ")
+        name = input("Is this Soph's GPS or Dan's [s/d]? ")
         name = name.lower()
         if name == 's':
             return 'soph'
         elif name == 'd':
             return 'dan'
         else:
-            print "Please answer 's' or 'd' for Soph or Dan..."
-            print
+            print("Please answer 's' or 'd' for Soph or Dan...")
+            print()
 
 
 def makenewfilename(basefilepath, originaldirname, name, CURYEAR):
@@ -217,7 +217,7 @@ def main():
                               newfilepath,
                               garminfilelocation)
 
-    print "Saving GPX file from Garmin as a compressed file in %s" % newfilepath
+    print("Saving GPX file from Garmin as a compressed file in %s" % newfilepath)
     savecompress(tempgpxfile, newfilepath)
 
     # # evoke preprocessGPX on copied file, make file paths and tell
