@@ -18,7 +18,7 @@ import os
 import subprocess
 import configparser
 import gzip
-from shutil import copy2
+from shutil import copy2, which
 
 __version__ = '0.3'
 
@@ -186,8 +186,54 @@ def savecompress(tempgpxfile, newfilepath):
     with open(tempgpxfile, 'rb') as tempgpxfileobj:
         with gzip.open(newfilepath + '.gz', 'wb') as compressgpxfile:
             compressgpxfile.writelines(tempgpxfileobj)
+    return
 
 
+def askyesno(question):
+    while 1:
+        answer = input(question).lower()
+        if answer in ('y', 'yes', 'n', 'no'):
+            if answer in ('y', 'yes'):
+                answer = True
+            if answer in ('n', 'no'):
+                answer = False
+            return answer
+        print('Please answer y or n')
+    return
+
+
+def checkapplication(application):
+    """ Look for an application and inform the user if not found
+    """
+    checkapp = which(application)
+
+    if checkapp:
+        return
+    else:
+        print("**[Warning]**")
+        print("An application that this script needs:")
+        print(application)
+        print("was not found on your system")
+        print()
+        print("You will be able to save a compressed copy of the GPX file,")
+        if application == "preprocessGPX":
+            print("but you will not be able to produce a preprocessed version.")
+        elif application == "viking":
+            print("but you will not be able to view or edit the GPX file.")
+        print()
+        answer = askyesno("Do you want to continue? [y/n] ")
+        if answer:
+            return
+        else:
+            print("Fair enough. Goodbye")
+            print()
+            sys.exit(0)
+
+    return        
+    
+
+
+            
 def main():
     """
     """
@@ -202,6 +248,11 @@ def main():
     # location (see settings)
     checkgarminmount(garminfilelocation)
 
+    # check for the auxiliary programmes this script may need and
+    # inform the user if not found
+    checkapplication("preprocessGPX")
+    checkapplication("viking")
+    
     # ask if the GPS is Soph's or Dan's
     name = asksophdan()
 
