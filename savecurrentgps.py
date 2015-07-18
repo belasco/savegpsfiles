@@ -220,6 +220,8 @@ def checkapplication(application):
         print("You will be able to save a compressed copy of the GPX file,")
         if application == "preprocessGPX":
             print("but you will not be able to produce a preprocessed version.")
+            print("If you know you have %s installed, you may have a PATH") % application
+            print("problem in the shell you launched from.")
         elif application == "viking":
             print("but you will not be able to view or edit the GPX file.")
         print()
@@ -231,7 +233,7 @@ def checkapplication(application):
             print()
             sys.exit(0)
 
-    return        
+    return
 
 
 def main():
@@ -240,7 +242,7 @@ def main():
     settingspath = getsettingspath()
     print()
     print("Loaded settings")
-    
+
     # read settings
     garminfilelocation, CURYEAR, basefilepath,\
         originaldirname, preprocessdirname, tempfilelocation\
