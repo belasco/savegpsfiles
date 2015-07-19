@@ -215,6 +215,21 @@ def checkapplication(application):
     return
 
 
+def parsepreprocessout(preprocessout):
+    """
+    strip the output of preprocessGPX, looking for the location of
+    the preprocessed file and return it so that viking can open
+    this
+    """
+    preprocessout = preprocessout.split()
+
+    for i in preprocessout:
+        if i.endswith('.gpx'):
+            return i
+
+    return None
+
+
 def preprocess(tempgpxfile, newfilepath, preprocessdirname, preprocessbin):
     """
     run preprocessGPX on the copied file
@@ -226,10 +241,14 @@ def preprocess(tempgpxfile, newfilepath, preprocessdirname, preprocessbin):
     preprocesslocation = os.path.join(os.path.dirname(os.path.dirname(newfilepath)),
                                       preprocessdirname)
 
-    subprocess.Popen([preprocessbin, tempgpxfile, '-d',
-                      preprocesslocation, '-c'])
+    # capture the output from preprocessGPX
+    preprocessout = subprocess.check_output([preprocessbin, tempgpxfile, '-d',
+                                             preprocesslocation, '-c'], universal_newlines=True)
 
-    return
+    # parse the output into the location of the preprocessed file and return
+    preprocessout = parsepreprocessout(preprocessout)
+
+    return preprocessout
 
 
 def main():
@@ -273,10 +292,16 @@ def main():
     savecompress(tempgpxfile, newfilepath)
 
     if preprocessbin:
-        preprocess(tempgpxfile, newfilepath, preprocessdirname, preprocessbin)
-        
-        # if vikingbin:
-        #     openviking(preprocessedfile)
+        preprocessout = preprocess(tempgpxfile, newfilepath,
+                                   preprocessdirname, preprocessbin)
+        if vikingbin:
+            openviking(vikingbin, preprocessout)
+
+    elif vikingbin:
+        openviking(vikingbin, tempgpxfile)
+
+    print("Script ends here - goodbye")
+    print()
 
 
 if __name__ == '__main__':
