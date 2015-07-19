@@ -22,17 +22,6 @@ from shutil import copy2, which
 __version__ = '0.3'
 
 
-def preprocess(newfilepath, preprocesslocation):
-    """
-    run preprocessGPX on the copied file
-    """
-    with open(os.devnull, 'w') as fnull:
-        subprocess.Popen(['preprocessGPX', newfilepath, '-d',
-                          preprocesslocation, '-c'],
-                         stdout=fnull, stderr=fnull)
-    return
-
-
 def getsettings(path):
     """
     get settings from the external settings file
@@ -71,7 +60,10 @@ def getsettingspath():
 
 
 def checkgarminmount(garminfilelocation):
-
+    """
+    Look for the Garmin mounted at the location set in the settings
+    config file and notify the user if it is not there.
+    """
     if not os.path.exists(garminfilelocation):
         print("Error:")
         print("No GPS found at %s" % garminfilelocation)
@@ -144,7 +136,8 @@ def makenewfilename(basefilepath, originaldirname, name, CURYEAR):
 
 def copygpxfile(tempfilelocation, newfilepath, garminfilelocation):
     """
-    copy the gpx file from garmin to a temp location and return the file path to it
+    copy the gpx file from garmin to a temp location and return the
+    file path to it
     """
     newfilename = os.path.basename(newfilepath)
     tempgpxfile = os.path.join(tempfilelocation, newfilename)
@@ -166,6 +159,10 @@ def savecompress(tempgpxfile, newfilepath):
 
 
 def askyesno(question):
+    """
+    Ask a yes or no question. Loop until the answer is returned.
+    Answering 'q' quits the programme
+    """
     while 1:
         answer = input(question).lower()
         if answer in ('y', 'yes'):
@@ -183,8 +180,11 @@ def askyesno(question):
 
 
 def checkapplication(application):
-    """ 
-    Look for an application and inform the user if not found
+    """
+    Look for an application and inform the user if not found. This
+    is run on preprocessGPX and viking. There are slightly
+    different comments for the case that each is not found.
+
     """
     checkapp = which(application)
 
@@ -212,6 +212,17 @@ def checkapplication(application):
             print()
             sys.exit(0)
 
+    return
+
+
+def preprocess(newfilepath, preprocesslocation):
+    """
+    run preprocessGPX on the copied file
+    """
+    with open(os.devnull, 'w') as fnull:
+        subprocess.Popen(['preprocessGPX', newfilepath, '-d',
+                          preprocesslocation, '-c'],
+                         stdout=fnull, stderr=fnull)
     return
 
 
