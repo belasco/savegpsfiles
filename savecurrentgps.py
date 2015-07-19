@@ -215,19 +215,18 @@ def checkapplication(application):
     return
 
 
-def preprocess(tempgpxfile, newfilepath, preprocessdirname):
+def preprocess(tempgpxfile, newfilepath, preprocessdirname, preprocessbin):
     """
     run preprocessGPX on the copied file
     """
-    preprocesslocation = os.path.join(os.path.dirname
-                                      (os.path.dirname(newfilepath)),
+    # prepare the file path for the preprocessed file, this looks
+    # elaborate because the '1_original' part of the newfilepath
+    # has to be removed before the '2_preprocessed' part can be
+    # added
+    preprocesslocation = os.path.join(os.path.dirname(os.path.dirname(newfilepath)),
                                       preprocessdirname)
-    processedfilepath = os.path.join(preprocesslocation,
-                                     os.path.basename(newfilepath))
-    processedfilepath = "{!s}_pp.gpx".format(os.path.splitext(processedfilepath)[0])
 
-
-    subprocess.Popen(['preprocessGPX', tempgpxfile, '-d',
+    subprocess.Popen([preprocessbin, tempgpxfile, '-d',
                       preprocesslocation, '-c'])
 
     return
@@ -274,7 +273,7 @@ def main():
     savecompress(tempgpxfile, newfilepath)
 
     if preprocessbin:
-        preprocess(tempgpxfile, newfilepath, preprocessdirname)
+        preprocess(tempgpxfile, newfilepath, preprocessdirname, preprocessbin)
 
     # # offer the user the option of opening file in Viking
     # vikingoption(screen, y, x, processedfilepath)
