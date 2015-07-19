@@ -12,7 +12,6 @@ if I build one later.
 
 """
 
-import curses
 import sys
 import os
 import subprocess
@@ -21,30 +20,6 @@ import gzip
 from shutil import copy2, which
 
 __version__ = '0.3'
-
-
-def vikingoption(screen, y, x, newfilepath):
-    """
-    Offer the user the option to open the file in Viking.
-    """
-    screen.clear()
-    screen.border(0)
-    screen.addstr(y, x, "Do you want to edit the")
-    screen.addstr(y + 1, x, "processed file in Viking?")
-    screen.addstr(y + 3, x, "Y", curses.A_UNDERLINE)
-    screen.addstr(y + 3, x + 1, "es/")
-    screen.addstr(y + 3, x + 4, "N", curses.A_UNDERLINE)
-    screen.addstr(y + 3, x + 5, "o?")
-    screen.refresh()
-    while 1:
-        answer = screen.getch()
-        if answer in [ord('Y'), ord('y')]:
-            with open(os.devnull, "w") as fnull:
-                subprocess.Popen(['viking', newfilepath],
-                                 stdout=fnull, stderr=fnull)
-            return
-        elif answer in [ord('N'), ord('n')]:
-            return
 
 
 def preprocess(newfilepath, preprocesslocation):
@@ -135,7 +110,10 @@ def asksophdan():
 
 def makenewfilename(basefilepath, originaldirname, name, CURYEAR):
     """
-    generate a filename and path for the destination GPX file
+    generate a filename and path for the destination GPX file. The
+    basename (file name) is then re-used for the preprocessed file
+    if it is made.
+
     """
     # find location of current GPS files on user's machine
     gpxfilepath = os.path.join(basefilepath, name + CURYEAR,
@@ -205,7 +183,8 @@ def askyesno(question):
 
 
 def checkapplication(application):
-    """ Look for an application and inform the user if not found
+    """ 
+    Look for an application and inform the user if not found
     """
     checkapp = which(application)
 
@@ -275,6 +254,9 @@ def main():
     print()
     print("Saving GPX file from Garmin as a compressed file in %s" % newfilepath)
     savecompress(tempgpxfile, newfilepath)
+
+    if preprocessbin:
+        preprocessfile(tempgpxfile, newfilepath)
 
     # # evoke preprocessGPX on copied file, make file paths and tell
     # # user
