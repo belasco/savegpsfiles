@@ -251,6 +251,17 @@ def preprocess(tempgpxfile, newfilepath, preprocessdirname, preprocessbin):
     return preprocessout
 
 
+def openviking(vikingbin, filetoopen):
+    """ask to open the file in viking"""
+    ans = askyesno("Open the file in Viking? ")
+
+    if ans:
+        print("Opening {!s} in Viking...".format(filetoopen))
+        subprocess.Popen([vikingbin, filetoopen])
+
+    return
+
+
 def main():
     """
     """
@@ -289,6 +300,7 @@ def main():
 
     print()
     print("Saving GPX file from Garmin as a compressed file in {!s}".format(newfilepath))
+    print()
     savecompress(tempgpxfile, newfilepath)
 
     if preprocessbin:
