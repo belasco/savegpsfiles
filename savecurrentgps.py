@@ -199,7 +199,7 @@ def checkapplication(application):
         print("You will be able to save a compressed copy of the GPX file,")
         if application == "preprocessGPX":
             print("but you will not be able to produce a preprocessed version.")
-            print("If you know you have %s installed, you may have a PATH") % application
+            print("If you know you have {!s} installed, you may have a PATH".format(application))
             print("problem in the shell you launched from.")
         elif application == "viking":
             print("but you will not be able to view or edit the GPX file.")
@@ -219,6 +219,16 @@ def preprocess(newfilepath, preprocesslocation):
     """
     run preprocessGPX on the copied file
     """
+    preprocesslocation = os.path.join(os.path.dirname
+                                      (os.path.dirname(newfilepath)),
+                                      preprocessdirname)
+
+    preprocess(tempgpxfile, preprocesslocation)
+    processedfilepath = os.path.join(preprocesslocation,
+                                     os.path.basename(newfilepath))
+    processedfilepath = "{!s}_pp.gpx".format(os.path.splitext(processedfilepath)[0])
+
+
     with open(os.devnull, 'w') as fnull:
         subprocess.Popen(['preprocessGPX', newfilepath, '-d',
                           preprocesslocation, '-c'],
@@ -238,7 +248,7 @@ def main():
         originaldirname, preprocessdirname, tempfilelocation\
         = getsettings(settingspath)
 
-    checkgarminmount(garminfilelocation)
+    # checkgarminmount(garminfilelocation)
     print("GPS found")
     print()
 
@@ -263,21 +273,11 @@ def main():
                               garminfilelocation)
 
     print()
-    print("Saving GPX file from Garmin as a compressed file in %s" % newfilepath)
+    print("Saving GPX file from Garmin as a compressed file in {!s}".format(newfilepath))
     savecompress(tempgpxfile, newfilepath)
 
     if preprocessbin:
-        preprocessfile(tempgpxfile, newfilepath)
-
-    # # evoke preprocessGPX on copied file, make file paths and tell
-    # # user
-    # preprocesslocation = os.path.join(os.path.dirname
-    #                                   (os.path.dirname(newfilepath)),
-    #                                   preprocessdirname)
-    # preprocess(tempgpxfile, preprocesslocation)
-    # processedfilepath = os.path.join(preprocesslocation,
-    #                                  os.path.basename(newfilepath))
-    # processedfilepath = "%s_pp.gpx" % (os.path.splitext(processedfilepath)[0])
+        preprocess(tempgpxfile, newfilepath)
 
     # # offer the user the option of opening file in Viking
     # vikingoption(screen, y, x, processedfilepath)
