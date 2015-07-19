@@ -274,9 +274,9 @@ def main():
 
     if preprocessbin:
         preprocess(tempgpxfile, newfilepath, preprocessdirname, preprocessbin)
-
-    # # offer the user the option of opening file in Viking
-    # vikingoption(screen, y, x, processedfilepath)
+        
+        # if vikingbin:
+        #     openviking(preprocessedfile)
 
 
 if __name__ == '__main__':
