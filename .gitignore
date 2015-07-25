@@ -45,5 +45,4 @@ nosetests.xml
 
 # settings
 # settings.cfg
-/settings.cfg
 /savecurrentgps.py.bak
