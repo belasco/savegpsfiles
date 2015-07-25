@@ -268,13 +268,14 @@ def main():
     settingspath = getsettingspath()
     print()
     print("Loaded settings")
+    print()
 
     # read settings
     garminfilelocation, CURYEAR, basefilepath,\
         originaldirname, preprocessdirname, tempfilelocation\
         = getsettings(settingspath)
 
-    # checkgarminmount(garminfilelocation)
+    checkgarminmount(garminfilelocation)
     print("GPS found")
     print()
 
@@ -292,18 +293,18 @@ def main():
                                   originaldirname,
                                   name, CURYEAR)
 
-    # copy the raw GPX file from the Garmin device to a temporary
-    # folder
+    print("Saving GPX file from Garmin as a compressed file in {!s}".format(newfilepath))
+    print()
+
     tempgpxfile = copygpxfile(tempfilelocation,
                               newfilepath,
                               garminfilelocation)
 
-    print()
-    print("Saving GPX file from Garmin as a compressed file in {!s}".format(newfilepath))
-    print()
     savecompress(tempgpxfile, newfilepath)
 
     if preprocessbin:
+        print("Pre-processing and saving a copy in {!s}".format(preprocessdirname))
+        print()
         preprocessout = preprocess(tempgpxfile, newfilepath,
                                    preprocessdirname, preprocessbin)
         if vikingbin:
