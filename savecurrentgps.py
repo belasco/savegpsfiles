@@ -4,7 +4,7 @@
 """savecurrentgps.py
 Daniel Belasco Rogers dan@planbperformance.net
 
-Wed 15 Jul 2015 17:38:21 CEST 
+Wed 15 Jul 2015 17:38:21 CEST
 
 Re-writing ncurses-based script to take back to bare essentials.
 Command line only with functions that could then be called by a gui
@@ -16,10 +16,30 @@ import sys
 import os
 import subprocess
 import configparser
+import argparse
 import gzip
 from shutil import copy2, which
+from os import path
 
-__version__ = '0.3'
+__version__ = '0.4'
+
+
+def parse_arguments():
+    desc = "Utility script to copy and compress the current GPX "
+    desc += "file from an attached Garmin GPS, "
+    desc += "produce a pre-processed gpx file and "
+    desc += "view the result (if Viking is installed)"
+    parser = argparse.ArgumentParser(description=desc)
+
+    settingspath = getsettingspath()
+
+    parser.add_argument('-v', '--version', action='version',
+                        version="%(prog)s {}".format(__version__))
+    parser.add_argument("-s", "--settingspath",
+                        default=settingspath,
+                        help="Path to the default settings file or define an alternate")
+
+    return parser.parse_args()
 
 
 def getsettings(path):
@@ -265,15 +285,16 @@ def openviking(vikingbin, filetoopen):
 def main():
     """
     """
-    settingspath = getsettingspath()
-    print()
-    print("Loaded settings")
-    print()
+    args = parse_arguments()
+    settingspath = path.expanduser(args.settingspath)
 
     # read settings
     garminfilelocation, CURYEAR, basefilepath,\
         originaldirname, preprocessdirname, tempfilelocation\
         = getsettings(settingspath)
+    print()
+    print("Loaded settings")
+    print()
 
     checkgarminmount(garminfilelocation)
     print("GPS found")
