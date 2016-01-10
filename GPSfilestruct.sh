@@ -44,9 +44,22 @@ makestruct(){
 
 # make the directory structure in the location supplied by the
 # first arg
-mkdir $1/currentGPS
+if [ ! -d $1 ];  # only make it if it isn't already there
+then
+    mkdir $1/currentGPS
+fi
 cd $1/currentGPS
+
+if [ -d $user1$2 ];  # check we haven't already done this!
+then
+    printf "\nIt looks like there is already a file structure for this year\n"
+    printf "\nPlease check and try again if necessary.\n\n"
+    exit 1
+fi
+
+# finally make the user folders and the same structure within each
 mkdir $user1$2
-mkdir $user2$2
 makestruct $user1$2
+mkdir $user2$2
 makestruct $user2$2
+
