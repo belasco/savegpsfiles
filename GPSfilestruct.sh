@@ -53,7 +53,7 @@ cd $1/currentGPS
 if [ -d $user1$2 ];  # check we haven't already done this!
 then
     printf "\nIt looks like there is already a file structure for this year\n"
-    printf "\nPlease check and try again if necessary.\n\n"
+    printf "Please check and try again if necessary.\n\n"
     exit 1
 fi
 
