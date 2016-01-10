@@ -63,3 +63,4 @@ makestruct $user1$2
 mkdir $user2$2
 makestruct $user2$2
 
+printf "\nSuccessfully created file structure in $1/currentGPS"
