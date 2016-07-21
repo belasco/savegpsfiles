@@ -12,10 +12,11 @@ usemessage(){
     # see here for why printf is better than echo
     # http://stackoverflow.com/questions/10576571/how-to-make-echo-interpret-backslash-escapes-and-not-print-a-trailing-newline
     printf "\nCreate a directory structure to save GPX files in\n"
-    printf "Usage: $0 path year\n"
+    printf "Usage: $(basename $0) path year\n"
+    printf "e.g. $(basename $0) ~/selectedplanbfiles 2017\n"
     printf "Where path is the directory to make the file structure in\n"
-    printf "(currently this is selectedplanbfiles/currentGPS)\n"
-    printf "and year is the (current or next) year in question\n\n"
+    printf "and year is the (current or next) year you require\n"
+    printf "in the format YYYY i.e. 2016\n\n"
 }
 
 if [ "$1" = "-h" ];
@@ -24,12 +25,13 @@ then
     exit 1
 elif [ "$1" = "-v" ];
 then
-    printf $version
-    printf "\n"
+    printf "Version=$version\n"
     exit 1
 elif [ $# -ne 2 ];
 then
     printf "\nError: not enough arguments\n"
+    printf "Please make sure you have included the directory\n"
+    printf "and the year.\n"
     usemessage
     exit 1
 fi
