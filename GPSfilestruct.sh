@@ -44,7 +44,7 @@ makestruct(){
 
 # make the directory structure in the location supplied by the
 # first arg
-if [ ! -d $1 ];  # only make it if it isn't already there
+if [ ! -d $1/currentGPS ];  # only make it if it isn't already there
 then
     mkdir $1/currentGPS
 fi
