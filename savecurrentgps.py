@@ -305,9 +305,9 @@ def main():
     print("Loaded settings")
     print()
 
-    # checkgarminmount(garminfilelocation)
-    # print("GPS found")
-    # print()
+    checkgarminmount(garminfilelocation)
+    print("GPS found")
+    print()
 
     # check for the auxiliary programmes this script may need and
     # inform the user if not found. Return the location of the
@@ -324,7 +324,6 @@ def main():
     newfilepath = makenewfilename(basefilepath,
                                   originaldirname,
                                   name, CURYEAR)
-    print(newfilepath)
 
     print("Saving GPX file from Garmin as a compressed file in {!s}".format(newfilepath))
     print()
