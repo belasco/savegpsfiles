@@ -54,13 +54,17 @@ def getsettings(path):
     originaldirname = config.get('core', 'originaldirname')
     preprocessdirname = config.get('core', 'preprocessdirname')
     tempfilelocation = config.get('core', 'tempfilelocation')
+    userlist = config.options('users')
+    userdict = {}
+    for key in userlist:
+        userdict[key] = config.get('users', key)
 
     # if path features tildes, expand these
     basefilepath = os.path.expanduser(basefilepath)
     tempfilelocation = os.path.expanduser(tempfilelocation)
 
     return garminfilelocation, CURYEAR, basefilepath,\
-        originaldirname, preprocessdirname, tempfilelocation
+        originaldirname, preprocessdirname, tempfilelocation, userdict
 
 
 def getsettingspath():
@@ -290,11 +294,12 @@ def main():
 
     # read settings
     garminfilelocation, CURYEAR, basefilepath,\
-        originaldirname, preprocessdirname, tempfilelocation\
-        = getsettings(settingspath)
+        originaldirname, preprocessdirname, tempfilelocation,\
+        userdict = getsettings(settingspath)
     print()
     print("Loaded settings")
-    print()
+    print(garminfilelocation, CURYEAR, basefilepath,
+          originaldirname, preprocessdirname, tempfilelocation, userdict)
 
     # checkgarminmount(garminfilelocation)
     # print("GPS found")
