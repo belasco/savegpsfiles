@@ -129,29 +129,6 @@ def chooseuser(userdict):
         print('Your entry was not valid. Please try again.')
 
 
-def asksophdan():
-    """
-    ask the user whether this is Soph's GPS or Dan's and return the
-    answer as 'name'
-    """
-    name = ""
-
-    while 1:
-        name = input("Is this Soph's GPS or Dan's [s/d]? ")
-        name = name.lower()
-        if name == 's':
-            return 'soph'
-        elif name == 'd':
-            return 'dan'
-        elif name == 'q':
-            print("You pressed q for Quit... Goodbye")
-            print()
-            sys.exit()
-        else:
-            print("Please answer 's' or 'd' for Soph or Dan...")
-            print()
-
-
 def makenewfilename(basefilepath, originaldirname, name, CURYEAR):
     """
     generate a filename and path for the destination GPX file. The
@@ -349,25 +326,25 @@ def main():
                                   name, CURYEAR)
     print(newfilepath)
 
-    # print("Saving GPX file from Garmin as a compressed file in {!s}".format(newfilepath))
-    # print()
+    print("Saving GPX file from Garmin as a compressed file in {!s}".format(newfilepath))
+    print()
 
-    # tempgpxfile = copygpxfile(tempfilelocation,
-    #                           newfilepath,
-    #                           garminfilelocation)
+    tempgpxfile = copygpxfile(tempfilelocation,
+                              newfilepath,
+                              garminfilelocation)
 
-    # savecompress(tempgpxfile, newfilepath)
+    savecompress(tempgpxfile, newfilepath)
 
-    # if preprocessbin:
-    #     print("Pre-processing and saving a copy in {!s}".format(preprocessdirname))
-    #     print()
-    #     preprocessout = preprocess(tempgpxfile, newfilepath,
-    #                                preprocessdirname, preprocessbin)
-    #     if vikingbin:
-    #         openviking(vikingbin, preprocessout)
+    if preprocessbin:
+        print("Pre-processing and saving a copy in {!s}".format(preprocessdirname))
+        print()
+        preprocessout = preprocess(tempgpxfile, newfilepath,
+                                   preprocessdirname, preprocessbin)
+        if vikingbin:
+            openviking(vikingbin, preprocessout)
 
-    # elif vikingbin:
-    #     openviking(vikingbin, tempgpxfile)
+    elif vikingbin:
+        openviking(vikingbin, tempgpxfile)
 
     print("Script ends here - goodbye")
     print()
