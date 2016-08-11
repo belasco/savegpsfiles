@@ -296,43 +296,43 @@ def main():
     print("Loaded settings")
     print()
 
-    checkgarminmount(garminfilelocation)
-    print("GPS found")
-    print()
+    # checkgarminmount(garminfilelocation)
+    # print("GPS found")
+    # print()
 
-    # check for the auxiliary programmes this script may need and
-    # inform the user if not found. Return the location of the
-    # found script for later subprocess calls
-    preprocessbin = checkapplication("preprocessGPX")
-    vikingbin = checkapplication("viking")
+    # # check for the auxiliary programmes this script may need and
+    # # inform the user if not found. Return the location of the
+    # # found script for later subprocess calls
+    # preprocessbin = checkapplication("preprocessGPX")
+    # vikingbin = checkapplication("viking")
 
-    name = asksophdan()
+    # name = asksophdan()
 
-    # create the new file path using the various settings and
-    # calculated values
-    newfilepath = makenewfilename(basefilepath,
-                                  originaldirname,
-                                  name, CURYEAR)
+    # # create the new file path using the various settings and
+    # # calculated values
+    # newfilepath = makenewfilename(basefilepath,
+    #                               originaldirname,
+    #                               name, CURYEAR)
 
-    print("Saving GPX file from Garmin as a compressed file in {!s}".format(newfilepath))
-    print()
+    # print("Saving GPX file from Garmin as a compressed file in {!s}".format(newfilepath))
+    # print()
 
-    tempgpxfile = copygpxfile(tempfilelocation,
-                              newfilepath,
-                              garminfilelocation)
+    # tempgpxfile = copygpxfile(tempfilelocation,
+    #                           newfilepath,
+    #                           garminfilelocation)
 
-    savecompress(tempgpxfile, newfilepath)
+    # savecompress(tempgpxfile, newfilepath)
 
-    if preprocessbin:
-        print("Pre-processing and saving a copy in {!s}".format(preprocessdirname))
-        print()
-        preprocessout = preprocess(tempgpxfile, newfilepath,
-                                   preprocessdirname, preprocessbin)
-        if vikingbin:
-            openviking(vikingbin, preprocessout)
+    # if preprocessbin:
+    #     print("Pre-processing and saving a copy in {!s}".format(preprocessdirname))
+    #     print()
+    #     preprocessout = preprocess(tempgpxfile, newfilepath,
+    #                                preprocessdirname, preprocessbin)
+    #     if vikingbin:
+    #         openviking(vikingbin, preprocessout)
 
-    elif vikingbin:
-        openviking(vikingbin, tempgpxfile)
+    # elif vikingbin:
+    #     openviking(vikingbin, tempgpxfile)
 
     print("Script ends here - goodbye")
     print()
