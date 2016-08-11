@@ -315,7 +315,6 @@ def main():
     preprocessbin = checkapplication("preprocessGPX")
     vikingbin = checkapplication("viking")
 
-    # name = asksophdan()
     user_uid = chooseuser(userdict)
     name = userdict[user_uid]
 
