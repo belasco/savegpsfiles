@@ -101,6 +101,34 @@ def checkgarminmount(garminfilelocation):
     return
 
 
+def chooseuser(userdict):
+    """
+    using the user dictionary from the settings file, ask who's GPS
+    this is
+
+    """
+
+    print("Please choose who this GPS belongs to from the list below:")
+
+    for key in sorted(userdict.keys()):
+        print("{}:  {}".format(key, userdict[key]))
+
+    while 1:
+        user_uid = input("Enter a number from 1 to {} > ".format(len(userdict)))
+        if user_uid in userdict.keys():
+            # confirm the selection
+            print()
+            askyesno('You selected {}. Is this correct? '.format(userdict[user_uid]))
+            return user_uid
+
+        elif user_uid.lower() == 'q':
+            print("You pressed q for Quit... Goodbye")
+            print
+            sys.exit()
+
+        print('Your entry was not valid. Please try again.')
+
+
 def asksophdan():
     """
     ask the user whether this is Soph's GPS or Dan's and return the
@@ -298,26 +326,28 @@ def main():
         userdict = getsettings(settingspath)
     print()
     print("Loaded settings")
-    print(garminfilelocation, CURYEAR, basefilepath,
-          originaldirname, preprocessdirname, tempfilelocation, userdict)
+    print()
 
     # checkgarminmount(garminfilelocation)
     # print("GPS found")
     # print()
 
-    # # check for the auxiliary programmes this script may need and
-    # # inform the user if not found. Return the location of the
-    # # found script for later subprocess calls
-    # preprocessbin = checkapplication("preprocessGPX")
-    # vikingbin = checkapplication("viking")
+    # check for the auxiliary programmes this script may need and
+    # inform the user if not found. Return the location of the
+    # found script for later subprocess calls
+    preprocessbin = checkapplication("preprocessGPX")
+    vikingbin = checkapplication("viking")
 
     # name = asksophdan()
+    user_uid = chooseuser(userdict)
+    name = userdict[user_uid]
 
-    # # create the new file path using the various settings and
-    # # calculated values
-    # newfilepath = makenewfilename(basefilepath,
-    #                               originaldirname,
-    #                               name, CURYEAR)
+    # create the new file path using the various settings and
+    # calculated values
+    newfilepath = makenewfilename(basefilepath,
+                                  originaldirname,
+                                  name, CURYEAR)
+    print(newfilepath)
 
     # print("Saving GPX file from Garmin as a compressed file in {!s}".format(newfilepath))
     # print()
