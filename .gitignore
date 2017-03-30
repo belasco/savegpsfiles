@@ -44,5 +44,6 @@ nosetests.xml
 *.pytest*
 
 # settings
-# settings.cfg
-/savecurrentgps.py.bak
+# /settings.cfg
+# /settingsdebian.cfg
+# /savecurrentgps.py.bak
