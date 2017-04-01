@@ -21,7 +21,7 @@ import gzip
 from shutil import copy2, which
 from os import path
 
-__version__ = '0.4'
+__version__ = '0.5'
 
 
 def parse_arguments():
