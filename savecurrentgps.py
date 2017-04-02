@@ -23,6 +23,7 @@ from os import path
 
 __version__ = '0.5'
 CONFIGPATH = '~/.config/savecurrentgps/settings.cfg'
+FILESTRUCTHELPER = 'GPSfilestruct.sh'
 
 
 def parse_arguments():
@@ -74,9 +75,9 @@ def getsettingspath():
     existence- this location may change
     """
     # curdir = os.path.dirname(__file__)
-    # settingspath = os.path.expanduser(os.path.join(curdir, 'settings.cfg'))
+    settingspath = os.path.expanduser(CONFIGPATH)
 
-    if not os.path.isfile(CONFIGPATH):
+    if not os.path.isfile(settingspath):
         print("Error: Settings file not found at {}".format(settingspath))
         print("Run createFiles.py and edit to make the file")
         print("in the correct location")
@@ -129,6 +130,25 @@ def chooseuser(userdict):
             sys.exit()
 
         print('Your entry was not valid. Please try again.')
+
+
+def checkfilestruct(basefilepath, name, curyear):
+    """"""
+    gpxfilepath = os.path.join(basefilepath, name + curyear)
+
+    if os.path.isdir(gpxfilepath):
+        return
+    else:
+        from datetime import date
+        yearnow = date.today().year
+        if yearnow != curyear:
+            print("The year in the settings file does not match the current year")
+            print("Please edit your settings file and try again.")
+            sys.exit()
+        else:
+            print("Folder structure to save GPX files not found.")
+            print("Please run {}".format(FILESTRUCTHELPER))
+            sys.exit
 
 
 def makenewfilename(basefilepath, originaldirname, name, curyear):
@@ -311,8 +331,9 @@ def main():
     user_uid = chooseuser(userdict)
     name = userdict[user_uid]
 
+    # check whether the user has the correct file structure
     checkfilestruct(basefilepath, name, curyear)
-    
+
     checkgarminmount(garminfilelocation)
     print("GPS found")
     print()
