@@ -63,7 +63,6 @@ def getsettings(path):
     for key in userlist:
         userdict[key] = config.get('users', key)
 
-    # if path features tildes, expand these
     basefilepath = os.path.expanduser(basefilepath)
     tempfilelocation = os.path.expanduser(tempfilelocation)
 
@@ -76,7 +75,7 @@ def getsettingspath():
     find settings in current dir of this script and capture non
     existence- this location may change
     """
-    # curdir = os.path.dirname(__file__)
+
     settingspath = os.path.expanduser(CONFIGPATH)
 
     if not os.path.isfile(settingspath):
@@ -93,17 +92,22 @@ def checkgarminmount(garminfilelocation):
     Look for the Garmin mounted at the location set in the settings
     config file and notify the user if it is not there.
     """
-    if not os.path.exists(garminfilelocation):
-        print("Error:")
-        print("No GPS found at %s" % garminfilelocation)
-        print()
-        print("Check that the GPS is plugged in")
-        print("and has finished making GPX file")
-        print("then try again.")
-        print()
-        sys.exit(2)
+    archprefix = '/run'
+    mountprefix = '/media/dbr'
+    garminlocation = os.path.join(mountprefix, garminfilelocation)
+    if not os.path.exists(garminlocation):
+        garminlocation = os.path.join(archprefix, garminlocation)
+        if not os.path.exists(garminlocation):
+            print("Error:")
+            print("No GPS found at %s" % garminlocation)
+            print()
+            print("Check that the GPS is plugged in")
+            print("and has finished making GPX file")
+            print("then try again.")
+            print()
+            sys.exit(2)
 
-    return
+        return garminlocation
 
 
 def chooseuser(userdict):
@@ -336,7 +340,7 @@ def main():
     # check whether the user has the correct file structure
     checkfilestruct(basefilepath, name, curyear)
 
-    checkgarminmount(garminfilelocation)
+    garminfilelocation = checkgarminmount(garminfilelocation)
     print("GPS found")
     print()
 
