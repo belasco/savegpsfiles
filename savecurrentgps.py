@@ -307,6 +307,12 @@ def main():
     print("Loaded settings")
     print()
 
+    # get user from dict derived from settings
+    user_uid = chooseuser(userdict)
+    name = userdict[user_uid]
+
+    
+    
     checkgarminmount(garminfilelocation)
     print("GPS found")
     print()
@@ -316,9 +322,6 @@ def main():
     # found script for later subprocess calls
     preprocessbin = checkapplication("preprocessGPX")
     vikingbin = checkapplication("viking")
-
-    user_uid = chooseuser(userdict)
-    name = userdict[user_uid]
 
     # create the new file path using the various settings and
     # calculated values
