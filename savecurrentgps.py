@@ -22,6 +22,7 @@ from shutil import copy2, which
 from os import path
 
 __version__ = '0.5'
+CONFIGPATH = '~/.config/savecurrentgps/settings.cfg'
 
 
 def parse_arguments():
@@ -72,12 +73,13 @@ def getsettingspath():
     find settings in current dir of this script and capture non
     existence- this location may change
     """
-    curdir = os.path.dirname(__file__)
-    settingspath = os.path.expanduser(os.path.join(curdir, 'settings.cfg'))
+    # curdir = os.path.dirname(__file__)
+    # settingspath = os.path.expanduser(os.path.join(curdir, 'settings.cfg'))
 
-    if not os.path.exists(settingspath):
-        print("Error: Settings file not found at %s" % settingspath)
-        print()
+    if not os.path.isfile(CONFIGPATH):
+        print("Error: Settings file not found at {}".format(settingspath))
+        print("Run createFiles.py and edit to make the file")
+        print("in the correct location")
         sys.exit(2)
 
     return settingspath
