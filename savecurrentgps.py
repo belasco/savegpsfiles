@@ -4,11 +4,13 @@
 """savecurrentgps.py
 Daniel Belasco Rogers dan@planbperformance.net
 
-Wed 15 Jul 2015 17:38:21 CEST
+Utility script to copy and compress the current GPX file from an attached
+Garmin GPS, produce a pre-processed gpx file and view the result (if Viking is
+installed)
 
-Re-writing ncurses-based script to take back to bare essentials.
-Command line only with functions that could then be called by a gui
-if I build one later.
+Re-writing April 2017 to change location of config file to user's home
+directory and implement the saving of a reference file with each download that
+tracks the age of the most recent GPX file downloaded.
 
 """
 
