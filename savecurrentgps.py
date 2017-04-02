@@ -49,7 +49,7 @@ def getsettings(path):
     """
     config = configparser.RawConfigParser()
     config.read(path)
-    CURYEAR = config.get('core', 'currentyear')
+    curyear = config.get('core', 'currentyear')
     garminfilelocation = config.get('core', 'garminfilelocation')
     basefilepath = config.get('core', 'basefilepath')
     originaldirname = config.get('core', 'originaldirname')
@@ -64,7 +64,7 @@ def getsettings(path):
     basefilepath = os.path.expanduser(basefilepath)
     tempfilelocation = os.path.expanduser(tempfilelocation)
 
-    return garminfilelocation, CURYEAR, basefilepath,\
+    return garminfilelocation, curyear, basefilepath,\
         originaldirname, preprocessdirname, tempfilelocation, userdict
 
 
@@ -131,7 +131,7 @@ def chooseuser(userdict):
         print('Your entry was not valid. Please try again.')
 
 
-def makenewfilename(basefilepath, originaldirname, name, CURYEAR):
+def makenewfilename(basefilepath, originaldirname, name, curyear):
     """
     generate a filename and path for the destination GPX file. The
     basename (file name) is then re-used for the preprocessed file
@@ -139,7 +139,7 @@ def makenewfilename(basefilepath, originaldirname, name, CURYEAR):
 
     """
     # find location of current GPS files on user's machine
-    gpxfilepath = os.path.join(basefilepath, name + CURYEAR,
+    gpxfilepath = os.path.join(basefilepath, name + curyear,
                                originaldirname)
 
     # look in directory and find latest filename in order to increment
@@ -159,7 +159,7 @@ def makenewfilename(basefilepath, originaldirname, name, CURYEAR):
     userchar = name[0].upper()
 
     # put it all together and return filepath
-    newfilename = "%s-%s-%s.gpx" % (CURYEAR, userchar, newnum)
+    newfilename = "%s-%s-%s.gpx" % (curyear, userchar, newnum)
     newfilepath = os.path.join(gpxfilepath, newfilename)
 
     return newfilepath
@@ -300,7 +300,7 @@ def main():
     settingspath = path.expanduser(args.settingspath)
 
     # read settings
-    garminfilelocation, CURYEAR, basefilepath,\
+    garminfilelocation, curyear, basefilepath,\
         originaldirname, preprocessdirname, tempfilelocation,\
         userdict = getsettings(settingspath)
     print()
@@ -311,7 +311,7 @@ def main():
     user_uid = chooseuser(userdict)
     name = userdict[user_uid]
 
-    
+    checkfilestruct(basefilepath, name, curyear)
     
     checkgarminmount(garminfilelocation)
     print("GPS found")
@@ -327,7 +327,7 @@ def main():
     # calculated values
     newfilepath = makenewfilename(basefilepath,
                                   originaldirname,
-                                  name, CURYEAR)
+                                  name, curyear)
 
     print("Saving GPX file from Garmin as a compressed file in {!s}".format(newfilepath))
     print()
