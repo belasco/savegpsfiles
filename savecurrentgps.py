@@ -148,14 +148,15 @@ def checkfilestruct(basefilepath, name, curyear):
     else:
         from datetime import date
         yearnow = date.today().year
-        if yearnow != curyear:
-            print("The year in the settings file does not match the current year")
+        if str(yearnow) != curyear:
+            print("The year in the settings file: {}".format(curyear))
+            print("does not match the current year: {}".format(yearnow))
             print("Please edit your settings file and try again.")
             sys.exit()
         else:
             print("Folder structure to save GPX files not found.")
             print("Please run {}".format(FILESTRUCTHELPER))
-            sys.exit
+            sys.exit()
 
 
 def makenewfilename(basefilepath, originaldirname, name, curyear):
