@@ -100,12 +100,10 @@ def checkgarminmount(garminsettinglocation):
         garminlocation = path.join(archprefix, garminsettinglocation)
         if not path.exists(garminlocation):
             print("Error:")
-            print("No GPS found at %s" % garminlocation)
-            print()
+            print("No GPS found at {}\n".format(garminlocation))
             print("Check that the GPS is plugged in")
             print("and has finished making GPX file")
-            print("then try again.")
-            print()
+            print("then try again.\n")
             sys.exit(2)
 
     return garminlocation
