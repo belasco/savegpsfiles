@@ -87,18 +87,18 @@ def getsettingspath():
     return settingspath
 
 
-def checkgarminmount(garminfilelocation):
+def checkgarminmount(garminsettinglocation):
     """
     Look for the Garmin mounted at the location set in the settings
     config file, cycling through the usual arch and debian mount points
     and notify the user if it is not there.
     """
-    archprefix = '/run'
+    archprefix = '/run/media/dbr'
     mountprefix = '/media/dbr'
-    garminlocation = os.path.join(mountprefix, garminfilelocation)
-    if not os.path.exists(garminlocation):
-        garminlocation = os.path.join(archprefix, garminlocation)
-        if not os.path.exists(garminlocation):
+    garminlocation = os.path.join(mountprefix, garminsettinglocation)
+    if not path.exists(garminlocation):
+        garminlocation = path.join(archprefix, garminsettinglocation)
+        if not path.exists(garminlocation):
             print("Error:")
             print("No GPS found at %s" % garminlocation)
             print()
@@ -139,24 +139,23 @@ def chooseuser(userdict):
         print('Your entry was not valid. Please try again.')
 
 
-def checkfilestruct(basefilepath, name, curyear):
+def checkfilestruct(basefilepath, curyear):
     """"""
-    gpxfilepath = os.path.join(basefilepath, name + curyear)
+    # gpxfilepath = os.path.join(basefilepath, name + curyear)
 
-    if os.path.isdir(gpxfilepath):
-        return
-    else:
-        from datetime import date
-        yearnow = date.today().year
-        if str(yearnow) != curyear:
-            print("The year in the settings file: {}".format(curyear))
-            print("does not match the current year: {}".format(yearnow))
-            print("Please edit your settings file and try again.")
-            sys.exit()
-        else:
-            print("Folder structure to save GPX files not found.")
-            print("Please run {}".format(FILESTRUCTHELPER))
-            sys.exit()
+    if not os.path.isdir(basefilepath):
+        print("Folder structure to save GPX files not found.")
+        print("Please run {}\n".format(FILESTRUCTHELPER))
+        sys.exit()
+    from datetime import date
+    yearnow = date.today().year
+    if str(yearnow) != curyear:
+        print("The year in the settings file: {}".format(curyear))
+        print("does not match the current year: {}".format(yearnow))
+        print("Please edit your settings file and try again.\n")
+        sys.exit()
+
+    return
 
 
 def makenewfilename(basefilepath, originaldirname, name, curyear):
@@ -332,11 +331,11 @@ def main():
         originaldirname, preprocessdirname, tempfilelocation,\
         userdict = getsettings(settingspath)
     print()
-    print("Loaded settings")
+    print("Loaded settings {}".format(settingspath))
     print()
 
     # check whether the user has the correct file structure
-    checkfilestruct(basefilepath, name, curyear)
+    checkfilestruct(basefilepath, curyear)
 
     # get user from dict derived from settings
     user_uid = chooseuser(userdict)
