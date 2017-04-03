@@ -90,7 +90,8 @@ def getsettingspath():
 def checkgarminmount(garminfilelocation):
     """
     Look for the Garmin mounted at the location set in the settings
-    config file and notify the user if it is not there.
+    config file, cycling through the usual arch and debian mount points
+    and notify the user if it is not there.
     """
     archprefix = '/run'
     mountprefix = '/media/dbr'
@@ -107,7 +108,7 @@ def checkgarminmount(garminfilelocation):
             print()
             sys.exit(2)
 
-        return garminlocation
+    return garminlocation
 
 
 def chooseuser(userdict):
