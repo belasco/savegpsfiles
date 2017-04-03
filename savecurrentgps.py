@@ -335,12 +335,12 @@ def main():
     print("Loaded settings")
     print()
 
+    # check whether the user has the correct file structure
+    checkfilestruct(basefilepath, name, curyear)
+
     # get user from dict derived from settings
     user_uid = chooseuser(userdict)
     name = userdict[user_uid]
-
-    # check whether the user has the correct file structure
-    checkfilestruct(basefilepath, name, curyear)
 
     garminfilelocation = checkgarminmount(garminfilelocation)
     print("GPS found")
