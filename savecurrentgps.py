@@ -21,7 +21,7 @@ import configparser
 import argparse
 import gzip
 from shutil import copy2, which
-from os import path
+from os import path, environ
 
 __version__ = '0.5'
 CONFIGPATH = '~/.config/savecurrentgps/settings.cfg'
@@ -93,9 +93,10 @@ def checkgarminmount(garminsettinglocation):
     config file, cycling through the usual arch and debian mount points
     and notify the user if it is not there.
     """
-    archprefix = '/run/media/dbr'
-    mountprefix = '/media/dbr'
-    garminlocation = os.path.join(mountprefix, garminsettinglocation)
+    user = environ.get('USER')
+    archprefix = path.join('/run/media', user)
+    mountprefix = path.join('/media', user)
+    garminlocation = path.join(mountprefix, garminsettinglocation)
     if not path.exists(garminlocation):
         garminlocation = path.join(archprefix, garminsettinglocation)
         if not path.exists(garminlocation):
