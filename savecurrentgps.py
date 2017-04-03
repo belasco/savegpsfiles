@@ -81,7 +81,7 @@ def getsettingspath():
     if not os.path.isfile(settingspath):
         print("Error: Settings file not found at {}".format(settingspath))
         print("Run createFiles.py and edit to make the file")
-        print("in the correct location")
+        print("in the correct location\n")
         sys.exit(2)
 
     return settingspath
@@ -357,11 +357,9 @@ def main():
                                   name, curyear)
 
     print("Saving GPX file from Garmin as a compressed file in {}".format(newfilepath))
-
     tempgpxfile = copygpxfile(tempfilelocation,
                               newfilepath,
                               garminfilelocation)
-
     savecompress(tempgpxfile, newfilepath)
 
     if preprocessbin:
