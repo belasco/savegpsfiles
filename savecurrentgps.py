@@ -356,8 +356,7 @@ def main():
                                   originaldirname,
                                   name, curyear)
 
-    print("Saving GPX file from Garmin as a compressed file in {!s}".format(newfilepath))
-    print()
+    print("Saving GPX file from Garmin as a compressed file in {}".format(newfilepath))
 
     tempgpxfile = copygpxfile(tempfilelocation,
                               newfilepath,
@@ -366,8 +365,7 @@ def main():
     savecompress(tempgpxfile, newfilepath)
 
     if preprocessbin:
-        print("Pre-processing and saving a copy in {!s}".format(preprocessdirname))
-        print()
+        print("Pre-processing and saving a copy in {}".format(preprocessdirname))
         preprocessout = preprocess(tempgpxfile, newfilepath,
                                    preprocessdirname, preprocessbin)
         if vikingbin:
@@ -376,8 +374,7 @@ def main():
     elif vikingbin:
         openviking(vikingbin, tempgpxfile)
 
-    print("Script ends here - goodbye")
-    print()
+    print("Script ends here - goodbye\n")
 
 
 if __name__ == '__main__':
