@@ -22,6 +22,8 @@ import argparse
 import gzip
 from shutil import copy2, which
 from os import path, environ
+from datetime import datetime
+
 
 __version__ = '0.5'
 CONFIGPATH = '~/.config/savecurrentgps/settings.cfg'
@@ -215,6 +217,21 @@ def savecompress(tempgpxfile, newfilepath):
     return
 
 
+def writeconfigdate(settingspath, name):
+    """
+    Write a file in config that stores the date of saving in epoch
+    time
+    """
+    settingsdir = path.dirname(settingspath)
+    writefilename = name + 'last'
+    writefilepath = path.join(settingsdir, writefilename)
+
+    with open(writefilepath, 'w') as f:
+        f.write("{}".format(round(datetime.now().timestamp())))
+
+    return writefilepath
+
+
 def askyesno(question):
     """
     Ask a yes or no question. Loop until the answer is returned.
@@ -362,15 +379,18 @@ def main():
                               garminfilelocation)
     savecompress(tempgpxfile, newfilepath)
 
-    if preprocessbin:
-        print("Pre-processing and saving a copy in {}".format(preprocessdirname))
-        preprocessout = preprocess(tempgpxfile, newfilepath,
-                                   preprocessdirname, preprocessbin)
-        if vikingbin:
-            openviking(vikingbin, preprocessout)
+    timefilepath = writeconfigdate(settingspath, name)
+    print("Wrote current time to {}".format(timefilepath))
 
-    elif vikingbin:
-        openviking(vikingbin, tempgpxfile)
+    # if preprocessbin:
+    #     print("Pre-processing and saving a copy in {}".format(preprocessdirname))
+    #     preprocessout = preprocess(tempgpxfile, newfilepath,
+    #                                preprocessdirname, preprocessbin)
+    #     if vikingbin:
+    #         openviking(vikingbin, preprocessout)
+
+    # elif vikingbin:
+    #     openviking(vikingbin, tempgpxfile)
 
     print("Script ends here - goodbye\n")
 
