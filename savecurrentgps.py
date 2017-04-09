@@ -60,10 +60,11 @@ def getsettings(path):
     originaldirname = config.get('core', 'originaldirname')
     preprocessdirname = config.get('core', 'preprocessdirname')
     tempfilelocation = config.get('core', 'tempfilelocation')
+
     userlist = config.options('users')
     userdict = {}
-    for key in userlist:
-        userdict[key] = config.get('users', key)
+    for idx, user in enumerate(userlist):
+        userdict[idx + 1] = user
 
     basefilepath = os.path.expanduser(basefilepath)
     tempfilelocation = os.path.expanduser(tempfilelocation)
@@ -116,9 +117,7 @@ def chooseuser(userdict):
     """
     using the user dictionary from the settings file, ask who's GPS
     this is
-
     """
-
     print("Please choose who this GPS belongs to from the list below:")
 
     for key in sorted(userdict.keys()):
@@ -126,6 +125,7 @@ def chooseuser(userdict):
 
     while 1:
         user_uid = input("Enter a number from 1 to {} > ".format(len(userdict)))
+        user_uid = int(user_uid)
         if user_uid in userdict.keys():
             # confirm the selection
             print()
@@ -357,9 +357,9 @@ def main():
     user_uid = chooseuser(userdict)
     name = userdict[user_uid]
 
-    garminfilelocation = checkgarminmount(garminfilelocation)
-    print("GPS found")
-    print()
+    # garminfilelocation = checkgarminmount(garminfilelocation)
+    # print("GPS found")
+    # print()
 
     # check for the auxiliary programmes this script may need and
     # inform the user if not found. Return the location of the
@@ -374,10 +374,10 @@ def main():
                                   name, curyear)
 
     print("Saving GPX file from Garmin as a compressed file in {}".format(newfilepath))
-    tempgpxfile = copygpxfile(tempfilelocation,
-                              newfilepath,
-                              garminfilelocation)
-    savecompress(tempgpxfile, newfilepath)
+    # tempgpxfile = copygpxfile(tempfilelocation,
+    #                           newfilepath,
+    #                           garminfilelocation)
+    # savecompress(tempgpxfile, newfilepath)
 
     timefilepath = writeconfigdate(settingspath, name)
     print("Wrote current time to {}".format(timefilepath))
