@@ -357,9 +357,9 @@ def main():
     user_uid = chooseuser(userdict)
     name = userdict[user_uid]
 
-    # garminfilelocation = checkgarminmount(garminfilelocation)
-    # print("GPS found")
-    # print()
+    garminfilelocation = checkgarminmount(garminfilelocation)
+    print("GPS found")
+    print()
 
     # check for the auxiliary programmes this script may need and
     # inform the user if not found. Return the location of the
@@ -374,23 +374,23 @@ def main():
                                   name, curyear)
 
     print("Saving GPX file from Garmin as a compressed file in {}".format(newfilepath))
-    # tempgpxfile = copygpxfile(tempfilelocation,
-    #                           newfilepath,
-    #                           garminfilelocation)
-    # savecompress(tempgpxfile, newfilepath)
+    tempgpxfile = copygpxfile(tempfilelocation,
+                              newfilepath,
+                              garminfilelocation)
+    savecompress(tempgpxfile, newfilepath)
 
     timefilepath = writeconfigdate(settingspath, name)
     print("Wrote current time to {}".format(timefilepath))
 
-    # if preprocessbin:
-    #     print("Pre-processing and saving a copy in {}".format(preprocessdirname))
-    #     preprocessout = preprocess(tempgpxfile, newfilepath,
-    #                                preprocessdirname, preprocessbin)
-    #     if vikingbin:
-    #         openviking(vikingbin, preprocessout)
+    if preprocessbin:
+        print("Pre-processing and saving a copy in {}".format(preprocessdirname))
+        preprocessout = preprocess(tempgpxfile, newfilepath,
+                                   preprocessdirname, preprocessbin)
+        if vikingbin:
+            openviking(vikingbin, preprocessout)
 
-    # elif vikingbin:
-    #     openviking(vikingbin, tempgpxfile)
+    elif vikingbin:
+        openviking(vikingbin, tempgpxfile)
 
     print("Script ends here - goodbye\n")
 
