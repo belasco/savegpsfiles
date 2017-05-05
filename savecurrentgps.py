@@ -217,17 +217,17 @@ def savecompress(tempgpxfile, newfilepath):
     return
 
 
-def writeconfigdate(settingspath, name):
-    """
-    Write a file in config that stores the date of saving in epoch
-    time
+def writedatefile(settingspath, name):
+    """Write a file with the date
+
+    Stored in human readable format in the 'basefilepath' from settings
     """
     settingsdir = path.dirname(settingspath)
     writefilename = name + 'last'
     writefilepath = path.join(settingsdir, writefilename)
 
     with open(writefilepath, 'w') as f:
-        f.write("{}".format(round(datetime.now().timestamp())))
+        f.write("{}".format(round(datetime.now().isotime())))
 
     return writefilepath
 
@@ -379,7 +379,7 @@ def main():
                               garminfilelocation)
     savecompress(tempgpxfile, newfilepath)
 
-    timefilepath = writeconfigdate(settingspath, name)
+    timefilepath = writedatefile(basefilepath, name)
     print("Wrote current time to {}".format(timefilepath))
 
     if preprocessbin:
