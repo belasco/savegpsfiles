@@ -227,7 +227,7 @@ def writedatefile(settingspath, name):
     writefilepath = path.join(settingsdir, writefilename)
 
     with open(writefilepath, 'w') as f:
-        f.write("{}".format(round(datetime.now().isotime())))
+        f.write("{}".format(datetime.now().isoformat()))
 
     return writefilepath
 
