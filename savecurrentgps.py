@@ -25,7 +25,7 @@ from os import path, environ
 from datetime import datetime
 
 
-__version__ = '0.5'
+__version__ = '0.6'
 CONFIGPATH = '~/.config/savecurrentgps/settings.cfg'
 FILESTRUCTHELPER = 'GPSfilestruct.sh'
 
