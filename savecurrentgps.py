@@ -222,9 +222,8 @@ def writedatefile(settingspath, name):
 
     Stored in human readable format in the 'basefilepath' from settings
     """
-    settingsdir = path.dirname(settingspath)
     writefilename = name + 'last'
-    writefilepath = path.join(settingsdir, writefilename)
+    writefilepath = path.join(settingspath, writefilename)
 
     with open(writefilepath, 'w') as f:
         f.write("{}".format(datetime.now().isoformat()))
