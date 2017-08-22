@@ -129,8 +129,13 @@ def chooseuser(userdict):
         if user_uid in userdict.keys():
             # confirm the selection
             print()
-            askyesno('You selected {}. Is this correct? '.format(userdict[user_uid]))
-            return user_uid
+            ans = askyesno('You selected {}. Is this correct? '.format(userdict[user_uid]))
+            if ans:
+                return user_uid
+            else:
+                print('Please run the script again to select the correct user')
+                print('Script ends here\n')
+                sys.exit()
 
         elif user_uid.lower() == 'q':
             print("You pressed q for Quit... Goodbye")
