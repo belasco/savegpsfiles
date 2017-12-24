@@ -23,11 +23,7 @@ import gzip
 from shutil import copy2, which
 from os import path, environ
 from datetime import datetime
-
-
-__version__ = '0.6'
-CONFIGPATH = '~/.config/savecurrentgps/settings.cfg'
-FILESTRUCTHELPER = 'GPSfilestruct.sh'
+from __init__ import __version__, CONFIGPATH, FILESTRUCTHELPER
 
 
 def parse_arguments():
