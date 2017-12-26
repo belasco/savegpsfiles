@@ -42,39 +42,58 @@ def chooseuser(userdict, maxyx):
     this is
     """
     margin = 4  # padding all round window
-    msg = "Please choose who this GPS belongs to from the list below:"
     userwin = curses.newwin(maxyx[0] - margin * 2,
                             maxyx[1] - margin * 2, margin, margin)
     userwin.box()
-    userwin.addstr(2, 4, msg)
 
+    line = 2  # running total of what line we're on
+    msg = "Please choose who this GPS belongs to from the list below:"
+    userwin.addstr(line, margin, msg)
+
+    line += 2
+    tab = margin + 4
     for idx, key in enumerate(sorted(userdict.keys())):
         msg = "{}:  {}".format(key, userdict[key])
-        userwin.addstr(6 + idx, 10, msg)
+        userwin.addstr(line, tab, msg)
+        line += 1
+
+    msg = "Enter a number from 1 to {} > ".format(len(userdict))
+    line += 1
+    userwin.addstr(line, margin, msg)
 
     userwin.refresh()
 
     while 1:
-        msg = "Enter a number from 1 to {} > ".format(len(userdict))
-        user_uid = input("Enter a number from 1 to {} > ".format(len(userdict)))
-        user_uid = int(user_uid)
-        if user_uid in userdict.keys():
-            # confirm the selection
-            print()
-            ans = askyesno('You selected {}. Is this correct? '.format(userdict[user_uid]))
-            if ans:
-                return user_uid
-            else:
-                print('Please run the script again to select the correct user')
-                print('Script ends here\n')
-                sys.exit()
-
-        elif user_uid.lower() == 'q':
-            print("You pressed q for Quit... Goodbye")
-            print
+        user_uid = userwin.getch()
+        line += 1
+        if user_uid == ord('q'):
+            curses.endwin()
+            print("User entered Q for Quit. Script ends here.")
             sys.exit()
+        elif user_uid not in userdict.keys():
+            msg = "That number is not in use. Please enter another. "
+            userwin.addstr(line, margin, msg)
+            
 
-        print('Your entry was not valid. Please try again.')
+        # user_uid = input("Enter a number from 1 to {} > ".format(len(userdict)))
+        # user_uid = int(user_uid)
+        # if user_uid in userdict.keys():
+        #     # confirm the selection
+        #     print()
+        #     ans = askyesno('You selected {}. Is this correct? '.format(userdict[user_uid]))
+        #     if ans:
+        #         return user_uid
+        #     else:
+        #         print('Please run the script again to select the correct user')
+        #         print('Script ends here\n')
+        #         sys.exit()
+
+        # elif user_uid.lower() == 'q':
+        #     print("You pressed q for Quit... Goodbye")
+        #     print
+        #     sys.exit()
+
+        # print('Your entry was not valid. Please try again.')
 
 
 def initscreen(myscreen):
