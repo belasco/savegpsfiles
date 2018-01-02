@@ -13,25 +13,30 @@ Copyright 2017 Daniel Belasco Rogers dan@planbperformance.net
 import curses
 from savecurrentgps import parse_arguments, getsettings,\
      checkgarminmount, makenewfilename
+import textwrap
+from os import path
 
 
 class Info(object):
     """Put a string in a box for the user"""
 
     def __init__(self, maxyx, title):
-        self.margin = 4
-        self.window = curses.newwin(maxyx[0] - self.margin * 2,
-                                    maxyx[1] - self.margin * 2,
-                                    self.margin, self.margin)
+        margin = 4
+        self.height = maxyx[0] - margin * 2
+        self.width = maxyx[1] - margin * 2
+        self.window = curses.newwin(self.height,
+                                    self.width,
+                                    margin, margin)
         self.window.box()
         self.window.keypad(1)
-        self.title = title
+        self.msg = textwrap.wrap(title, self.width - margin * 2)
 
     def display(self):
         line = 2
         margin = 4
-        self.window.addstr(line, margin, self.title)
-        self.window.addstr(line + 2, margin, 'Press any key.')
+
+        for idx, item in enumerate(self.msg):
+            self.window.addstr(line + idx, margin, item)
 
         self.window.getch()
 
@@ -152,7 +157,8 @@ def main(myscreen):
     garminfilelocation = checkgarminmount(garminfilelocation)
 
     if not garminfilelocation:
-        info = Info(maxyx, 'No Garmin found. Please try again')
+        msg = "No Garmin found. Please plug in, wait for it to produce a GPX file and try again"
+        info = Info(maxyx, msg)
         info.display()
         exit(2)
     else:
@@ -168,7 +174,7 @@ def main(myscreen):
                                   originaldirname,
                                   name, curyear)
 
-    msg = "Saving GPX file as a compressed file in {}".format(newfilepath)
+    msg = "Saving GPX file as a compressed file {}.gz".format(path.basename(newfilepath))
     info = Info(maxyx, msg)
     info.display()
 
