@@ -99,14 +99,23 @@ def checkgarminmount(garminsettinglocation):
     if not path.exists(garminlocation):
         garminlocation = path.join(archprefix, garminsettinglocation)
         if not path.exists(garminlocation):
-            print("Error:")
-            print("No GPS found at {}\n".format(garminlocation))
-            print("Check that the GPS is plugged in")
-            print("and has finished making GPX file")
-            print("then try again.\n")
-            sys.exit(2)
+            garminlocation = False
 
     return garminlocation
+
+
+def nogarmin():
+    """Notify user that Garmin was not found and exit"""
+
+    msg = """Error:
+No GPS found.
+
+Check that the GPS is plugged in, mounted,
+and has finished making a GPX file,
+then try again.
+"""
+    print(msg)
+    sys.exit(2)
 
 
 def chooseuser(userdict):
@@ -358,8 +367,11 @@ def main():
     name = userdict[user_uid]
 
     garminfilelocation = checkgarminmount(garminfilelocation)
-    print("GPS found")
-    print()
+    if not garminfilelocation:
+        nogarmin()
+    else:
+        print("GPS found")
+        print()
 
     # check for the auxiliary programmes this script may need and
     # inform the user if not found. Return the location of the
