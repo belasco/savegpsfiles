@@ -14,11 +14,11 @@ import curses
 from savecurrentgps import parse_arguments, getsettings,\
      checkgarminmount, makenewfilename
 import textwrap
-from os import path
+from os.path import basename
 
 
 class Info(object):
-    """Put a string in a box for the user"""
+    """Put a string in a window for the user"""
 
     def __init__(self, maxyx, title):
         margin = 4
@@ -49,7 +49,8 @@ class Menu(object):
 
     After instantiating the object, display it with the object's display
     function. The answer is the answer property of the Menu object ie.
-    Menuname.answer
+    Menuname.answer. maxyx is a screen property which gives a width and
+    height for the window.
     """
     def __init__(self, items, maxyx, title):
         self.margin = 4
@@ -65,7 +66,7 @@ class Menu(object):
     def display(self):
         line = 2  # running total of what line we're on for layout
         margin = 4
-        # self.msg = "Please choose who this GPS belongs to from the list below:"
+
         self.window.addstr(line, margin, self.title)
 
         line += 2
@@ -174,7 +175,7 @@ def main(myscreen):
                                   originaldirname,
                                   name, curyear)
 
-    msg = "Saving GPX file as a compressed file {}.gz".format(path.basename(newfilepath))
+    msg = "Saving GPX file as a compressed file {}.gz".format(basename(newfilepath))
     info = Info(maxyx, msg)
     info.display()
 
