@@ -262,40 +262,30 @@ def askyesno(question):
     return
 
 
-def checkapplication(application):
-    """
-    Look for an application and inform the user if not found. This
-    is run on preprocessGPX and viking. There are slightly
-    different comments for the case that each is not found.
+def appwarn(application):
+    """Warn user if there are missing applications"""
 
-    """
-    checkapp = which(application)
+    print("**[Warning]**")
+    print("An application that this script needs:")
+    print(application)
+    print("...was not found on your system")
+    print()
+    print("You will be able to save a compressed copy of the GPX file,")
+    if application == "preprocessGPX":
+        print("but you will not be able to produce a preprocessed version.")
+        print("If you know you have {!s} installed, you may have a PATH".format(application))
+        print("problem in the shell you launched from.")
+    elif application == "viking":
+        print("but you will not be able to view or edit the GPX file.")
+    print()
 
-    if checkapp:
-        return checkapp
+    answer = askyesno("Do you want to continue? [y/n] ")
+    if answer:
+        return
     else:
-        print("**[Warning]**")
-        print("An application that this script needs:")
-        print(application)
-        print("...was not found on your system")
+        print("Fair enough. Goodbye")
         print()
-        print("You will be able to save a compressed copy of the GPX file,")
-        if application == "preprocessGPX":
-            print("but you will not be able to produce a preprocessed version.")
-            print("If you know you have {!s} installed, you may have a PATH".format(application))
-            print("problem in the shell you launched from.")
-        elif application == "viking":
-            print("but you will not be able to view or edit the GPX file.")
-        print()
-        answer = askyesno("Do you want to continue? [y/n] ")
-        if answer:
-            return
-        else:
-            print("Fair enough. Goodbye")
-            print()
-            sys.exit(0)
-
-    return
+        sys.exit(0)
 
 
 def parsepreprocessout(preprocessout):
@@ -334,17 +324,6 @@ def preprocess(tempgpxfile, newfilepath, preprocessdirname, preprocessbin):
     return preprocessout
 
 
-def openviking(vikingbin, filetoopen):
-    """ask to open the file in viking"""
-    ans = askyesno("Open the file in Viking? ")
-
-    if ans:
-        print("Opening {!s} in Viking...".format(filetoopen))
-        subprocess.Popen([vikingbin, filetoopen])
-
-    return
-
-
 def main():
     """
     """
@@ -376,8 +355,12 @@ def main():
     # check for the auxiliary programmes this script may need and
     # inform the user if not found. Return the location of the
     # found script for later subprocess calls
-    preprocessbin = checkapplication("preprocessGPX")
-    vikingbin = checkapplication("viking")
+    preprocessbin = which("preprocessGPX")
+    if not preprocessbin:
+        appwarn('preprocessGPX')
+    vikingbin = which("viking")
+    if not vikingbin:
+        appwarn('viking')
 
     # create the new file path using the various settings and
     # calculated values
@@ -398,11 +381,12 @@ def main():
         print("Pre-processing and saving a copy in {}".format(preprocessdirname))
         preprocessout = preprocess(tempgpxfile, newfilepath,
                                    preprocessdirname, preprocessbin)
-        if vikingbin:
-            openviking(vikingbin, preprocessout)
 
-    elif vikingbin:
-        openviking(vikingbin, tempgpxfile)
+    if vikingbin:
+        ans = askyesno("Open the file in Viking? ")
+        if ans:
+            print("Opening {!s} in Viking...".format(preprocessout))
+            subprocess.Popen([vikingbin, preprocessout])
 
     print("Script ends here - goodbye\n")
 
