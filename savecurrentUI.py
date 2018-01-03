@@ -1,20 +1,23 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """
 savecurrentUI.py
 2017/12/24 13:47:20
 
-An attempt to build an ncurses UI for savecurrentgps
+A curses User Interface (UI) for savecurrentgps
 
 Copyright 2017 Daniel Belasco Rogers dan@planbperformance.net
 """
 
 import curses
-from savecurrentgps import parse_arguments, getsettings,\
-     checkgarminmount, makenewfilename
 import textwrap
+import subprocess
 from os.path import basename
+from shutil import which
+from savecurrentgps import parse_arguments, getsettings,\
+     checkgarminmount, makenewfilename, copygpxfile, \
+     savecompress, writedatefile, preprocess
 
 
 class Info(object):
@@ -166,6 +169,25 @@ def main(myscreen):
         info = Info(maxyx, 'Garmin found, ready for import')
         info.display()
 
+    # check for the auxiliary programmes this script may need and
+    # inform the user if not found. Return the location of the
+    # found script for later subprocess calls
+    preprocessbin = which("preprocessGPX")
+    if not preprocessbin:
+        msg = "The programme preprocessGPX was not found. "
+        msg += "You will be able to save a compressed file, "
+        msg += "but you will not be able to pre-process the file. "
+        msg += "If you know you have it installed, you may "
+        msg += "have a PATH problem because WHICH can't find it."
+        info = Info(maxyx, msg)
+        info.display()
+    vikingbin = which("viking")
+    if not vikingbin:
+        msg = "Viking was not found on this system. "
+        msg += "You will not be able to view or edit GPX files."
+        info = Info(maxyx, msg)
+        info.display()
+
     # get and confirm user
     name = getuser(userdict, maxyx)
 
@@ -175,9 +197,37 @@ def main(myscreen):
                                   originaldirname,
                                   name, curyear)
 
-    msg = "Saving GPX file as a compressed file {}.gz".format(basename(newfilepath))
+    msg = "Saving GPX file as a compressed file "
+    msg += "{}.gz".format(basename(newfilepath))
     info = Info(maxyx, msg)
     info.display()
+
+    tempgpxfile = copygpxfile(tempfilelocation,
+                              newfilepath,
+                              garminfilelocation)
+    savecompress(tempgpxfile, newfilepath)
+
+    timefilepath = writedatefile(basefilepath, name)
+    msg = "Wrote current time to {}".format(timefilepath)
+    info = Info(maxyx, msg)
+    info.display
+
+    if preprocessbin:
+        msg = "Pre-processing and saving a copy in {}".format(preprocessdirname)
+        info = Info(maxyx, msg)
+        info.display
+        preprocessout = preprocess(tempgpxfile, newfilepath,
+                                   preprocessdirname, preprocessbin)
+
+    if vikingbin:
+        title = "Open the file in Viking?"
+        vikingmenu = Menu(['Yes', 'No'], maxyx, title)
+        vikingmenu.display()
+        if vikingmenu.answer == 'Yes':
+            print("Opening {!s} in Viking...".format(preprocessout))
+            subprocess.Popen([vikingbin, preprocessout])
+
+    print("Script ends here - goodbye\n")
 
 
 if __name__ == '__main__':
