@@ -197,23 +197,30 @@ def main(myscreen):
                                   originaldirname,
                                   name, curyear)
 
-    msg = "Saving GPX file as a compressed file "
-    msg += "{}.gz".format(basename(newfilepath))
-    info = Info(maxyx, msg)
-    info.display()
-
+    # copy gpx file from Garmin to temporary location set by settings
     tempgpxfile = copygpxfile(tempfilelocation,
                               newfilepath,
                               garminfilelocation)
+
+    # use gzip to compress that file and save it in the 'original' folder
     savecompress(tempgpxfile, newfilepath)
 
+    msg = "Saved GPX file as a compressed file "
+    msg += "{}.gz ".format(tempgpxfile)
+    msg += "Press any key to continue."
+    info = Info(maxyx, msg)
+    info.display()
+
+
     timefilepath = writedatefile(basefilepath, name)
-    msg = "Wrote current time to {}".format(timefilepath)
+    msg = "Wrote current time to {} ".format(timefilepath)
+    msg += "Press any key to continue."
     info = Info(maxyx, msg)
     info.display
 
     if preprocessbin:
         msg = "Pre-processing and saving a copy in {}".format(preprocessdirname)
+        msg += "Press any key to continue."
         info = Info(maxyx, msg)
         info.display
         preprocessout = preprocess(tempgpxfile, newfilepath,
@@ -224,10 +231,7 @@ def main(myscreen):
         vikingmenu = Menu(['Yes', 'No'], maxyx, title)
         vikingmenu.display()
         if vikingmenu.answer == 'Yes':
-            print("Opening {!s} in Viking...".format(preprocessout))
             subprocess.Popen([vikingbin, preprocessout])
-
-    print("Script ends here - goodbye\n")
 
 
 if __name__ == '__main__':
