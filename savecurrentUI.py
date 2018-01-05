@@ -13,7 +13,6 @@ Copyright 2017 Daniel Belasco Rogers dan@planbperformance.net
 import curses
 import textwrap
 import subprocess
-from os.path import basename
 from shutil import which
 from savecurrentgps import parse_arguments, getsettings,\
      checkgarminmount, makenewfilename, copygpxfile, \
