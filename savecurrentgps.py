@@ -358,6 +358,7 @@ def main():
     preprocessbin = which("preprocessGPX")
     if not preprocessbin:
         appwarn('preprocessGPX')
+
     vikingbin = which("viking")
     if not vikingbin:
         appwarn('viking')
