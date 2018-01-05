@@ -211,7 +211,6 @@ def main(myscreen):
     info = Info(maxyx, msg)
     info.display()
 
-
     timefilepath = writedatefile(basefilepath, name)
     msg = "Wrote current time to {} ".format(timefilepath)
     msg += "Press any key to continue."
