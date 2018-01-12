@@ -40,6 +40,9 @@ class Info(object):
         for idx, item in enumerate(self.msg):
             self.window.addstr(line + idx, margin, item)
 
+        line += len(self.msg)
+        self.window.addstr(line + 2, margin, "Press any key to continue ")
+
         self.window.getch()
 
         self.window.clear()
@@ -196,6 +199,10 @@ def main(myscreen):
                                   originaldirname,
                                   name, curyear)
 
+    msg = "Please be patient, this next step could take some time."
+    info = Info(maxyx, msg)
+    info.display()
+
     # copy gpx file from Garmin to temporary location set by settings
     tempgpxfile = copygpxfile(tempfilelocation,
                               newfilepath,
@@ -212,13 +219,11 @@ def main(myscreen):
 
     timefilepath = writedatefile(basefilepath, name)
     msg = "Wrote current time to {} ".format(timefilepath)
-    msg += "Press any key to continue."
     info = Info(maxyx, msg)
     info.display
 
     if preprocessbin:
         msg = "Pre-processing and saving a copy in {}".format(preprocessdirname)
-        msg += "Press any key to continue."
         info = Info(maxyx, msg)
         info.display
         preprocessout = preprocess(tempgpxfile, newfilepath,
