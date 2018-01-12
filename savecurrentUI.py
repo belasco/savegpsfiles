@@ -199,10 +199,6 @@ def main(myscreen):
                                   originaldirname,
                                   name, curyear)
 
-    msg = "Please be patient, this next step could take some time."
-    info = Info(maxyx, msg)
-    info.display()
-
     # copy gpx file from Garmin to temporary location set by settings
     tempgpxfile = copygpxfile(tempfilelocation,
                               newfilepath,
@@ -213,7 +209,6 @@ def main(myscreen):
 
     msg = "Saved GPX file as a compressed file "
     msg += "{}.gz ".format(tempgpxfile)
-    msg += "Press any key to continue."
     info = Info(maxyx, msg)
     info.display()
 
