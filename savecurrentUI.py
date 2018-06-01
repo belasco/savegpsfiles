@@ -233,9 +233,9 @@ def main(myscreen):
     info.display()
 
     timefilepath = writedatefile(basefilepath, name)
-    # msg = "Wrote current time to {} ".format(timefilepath)
-    # info = Info(maxyx, msg)
-    # info.display
+    msg = "Wrote current time to {} ".format(timefilepath)
+    info = Info(maxyx, msg)
+    info.display
 
     if preprocessbin:
         msg = "Pre-processing and saving a copy in {}".format(preprocessdirname)
