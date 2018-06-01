@@ -17,6 +17,7 @@ from shutil import which
 from savecurrentgps import parse_arguments, getsettings,\
      checkgarminmount, makenewfilename, copygpxfile, \
      savecompress, writedatefile, preprocess
+import logging
 
 
 class Info(object):
@@ -193,6 +194,10 @@ def main(myscreen):
     # get and confirm user
     name = getuser(userdict, maxyx)
 
+    msg = "Copying file to temporary location."
+    info = Info(maxyx, msg)
+    info.display()
+
     # create the new file path using the various settings and
     # calculated values
     newfilepath = makenewfilename(basefilepath,
@@ -213,9 +218,9 @@ def main(myscreen):
     info.display()
 
     timefilepath = writedatefile(basefilepath, name)
-    msg = "Wrote current time to {} ".format(timefilepath)
-    info = Info(maxyx, msg)
-    info.display
+    # msg = "Wrote current time to {} ".format(timefilepath)
+    # info = Info(maxyx, msg)
+    # info.display
 
     if preprocessbin:
         msg = "Pre-processing and saving a copy in {}".format(preprocessdirname)
