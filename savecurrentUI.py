@@ -21,7 +21,8 @@ import logging
 
 
 class Info(object):
-    """Put a string in a window for the user"""
+    """Put a string in a window for the user. Do not wait for key
+    press"""
 
     def __init__(self, maxyx, title):
         margin = 4
@@ -33,6 +34,20 @@ class Info(object):
         self.window.box()
         self.window.keypad(1)
         self.msg = textwrap.wrap(title, self.width - margin * 2)
+
+    def display(self):
+        line = 2
+        margin = 4
+
+        for idx, item in enumerate(self.msg):
+            self.window.addstr(line + idx, margin, item)
+
+        self.window.refresh()
+
+
+class InfoPress(Info):
+    """Modify Info with a press any key message and getch to wait on
+    screen for user press"""
 
     def display(self):
         line = 2
@@ -165,11 +180,11 @@ def main(myscreen):
 
     if not garminfilelocation:
         msg = "No Garmin found. Please plug in, wait for it to produce a GPX file and try again"
-        info = Info(maxyx, msg)
+        info = InfoPress(maxyx, msg)
         info.display()
         exit(2)
     else:
-        info = Info(maxyx, 'Garmin found, ready for import')
+        info = InfoPress(maxyx, 'Garmin found, ready for import')
         info.display()
 
     # check for the auxiliary programmes this script may need and
@@ -182,13 +197,13 @@ def main(myscreen):
         msg += "but you will not be able to pre-process the file. "
         msg += "If you know you have it installed, you may "
         msg += "have a PATH problem because WHICH can't find it."
-        info = Info(maxyx, msg)
+        info = InfoPress(maxyx, msg)
         info.display()
     vikingbin = which("viking")
     if not vikingbin:
         msg = "Viking was not found on this system. "
         msg += "You will not be able to view or edit GPX files."
-        info = Info(maxyx, msg)
+        info = InfoPress(maxyx, msg)
         info.display()
 
     # get and confirm user
