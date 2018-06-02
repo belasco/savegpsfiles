@@ -16,7 +16,7 @@ import os
 import argparse
 from shutil import copy2
 
-__version = '0.1'
+__version = '0.2'
 
 
 def parseargs():
