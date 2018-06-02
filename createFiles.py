@@ -7,18 +7,21 @@ createFiles.py
 modified Sat 02 Jun 2018 15:59:06 CEST
 
 A utility script to create the settings files in the right place
-(~/.config/savecurrentgps/)
+(~/.config/savecurrentgps/) and the base file structure for savecurrentgps
 
-Copyright 2017 Daniel Belasco Rogers danbelasco@yahoo.co.uk
+Copyright 2017 Daniel Belasco Rogers dan@planbperformance.net
 """
 
 import sys
 import os
 import argparse
 from datetime import datetime
-from shutil import copy2
 
 __version = '0.2'
+# folder names (see savecurrent for details)
+ORIGINAL = '1_original'  # name for the folder for original files
+PROCESSED = '2_preprocessed'  # name for the folder for processed files
+CLEANED = '3_cleaned'  # cleaned folder name
 
 
 def parseargs():
@@ -58,17 +61,6 @@ def parseargs():
     return parser.parse_args()
 
 
-def copyskeleton(configpath):
-
-    settingsname = 'settings.cfg'
-    curdir = os.path.dirname(__file__)
-    skeletonpath = os.path.expanduser(os.path.join(curdir, settingsname))
-    os.mkdir(configpath)
-    newconfigfile = os.path.join(configpath, settingsname)
-    copy2(skeletonpath, newconfigfile)
-    return
-
-
 def makesettings(configpath, year, basefilepath, tempfile, userlist):
     """"""
     EOL = "\n"
@@ -77,8 +69,8 @@ def makesettings(configpath, year, basefilepath, tempfile, userlist):
     configfile += "# Mount point after the username" + EOL
     configfile += "garminfilelocation=GARMIN/Garmin/GPX/Current/Current.gpx" + EOL
     configfile += "basefilepath={}{}".format(basefilepath, EOL)
-    configfile += "originaldirname=1_original" + EOL
-    configfile += "preprocessdirname=2_preprocessed" + EOL
+    configfile += "originaldirname={}{}".format(ORIGINAL, EOL)
+    configfile += "preprocessdirname={}{}".format(PROCESSED, EOL)
     configfile += "tempfilelocation={}{}".format(tempfile, EOL)
     configfile += "[users]" + EOL
 
@@ -100,26 +92,49 @@ def checkdir(path):
         sys.exit(2)
 
 
+def makefilestructure(basefilepath, year, userlist):
+
+    os.mkdir(basefilepath)
+
+    for user in userlist:
+        userdir = user + str(year)
+        userdir = os.path.join(basefilepath, userdir)
+        os.mkdir(userdir)
+        os.mkdir(os.path.join(userdir, ORIGINAL))
+        os.mkdir(os.path.join(userdir, PROCESSED))
+        os.mkdir(os.path.join(userdir, CLEANED))
+
+    return
+
+
 def main():
     """
     """
     args = parseargs()
 
-    basefilepath = checkdir(args.basefilepath)
     tempfile = checkdir(args.tempfile)
     configpath = checkdir(args.configpath)
     configpath = os.path.join(os.path.expanduser(args.configpath), 'settings.cfg')
 
+    # get current year if not provided
     if not args.year:
         year = datetime.now().year
     else:
         year = args.year
 
+    # make the file structure if not there
+    if os.path.isdir(args.basefilepath):
+        print('Already have a file structure to save the gpx files.')
+    else:
+        makefilestructure(args.basefilepath, year, args.userlist)
+        print('Made a file structure at {}'.format(args.basefilepath))
+
+    # make and save the config file
     if os.path.isfile(configpath):
         print("You already have a config file at {}".format(configpath))
         print("No further action for this script.")
     else:
-        configfile = makesettings(configpath, year, basefilepath, tempfile, args.userlist)
+        configfile = makesettings(configpath, year, args.basefilepath, tempfile, args.userlist)
         with open(configpath, 'w') as f:
             f.write(configfile)
         print("Wrote new config file to {}".format(configpath))
