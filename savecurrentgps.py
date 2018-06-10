@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """savecurrentgps.py
@@ -20,7 +20,8 @@ import subprocess
 import configparser
 import argparse
 import gzip
-from shutil import copy2, which
+from shutil import copy2
+from distutils.spawn import find_executable
 from os import path, environ
 from datetime import datetime
 from __init__ import __version__, CONFIGPATH, FILESTRUCTHELPER
@@ -355,11 +356,11 @@ def main():
     # check for the auxiliary programmes this script may need and
     # inform the user if not found. Return the location of the
     # found script for later subprocess calls
-    preprocessbin = which("preprocessGPX")
+    preprocessbin = find_executable("preprocessGPX")
     if not preprocessbin:
         appwarn('preprocessGPX')
 
-    vikingbin = which("viking")
+    vikingbin = find_executable("viking")
     if not vikingbin:
         appwarn('viking')
 
