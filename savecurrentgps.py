@@ -316,7 +316,7 @@ def preprocess(tempgpxfile, newfilepath, preprocessdirname, preprocessbin):
                                       preprocessdirname)
 
     # capture the output from preprocessGPX
-    preprocessout = subprocess.check_output([preprocessbin, tempgpxfile, '-d',
+    preprocessout = subprocess.check_output(['python', preprocessbin, tempgpxfile, '-d',
                                              preprocesslocation, '-c'], universal_newlines=True)
 
     # parse the output into the location of the preprocessed file and return

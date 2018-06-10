@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """
@@ -13,7 +13,7 @@ Copyright 2017 Daniel Belasco Rogers dan@planbperformance.net
 import curses
 import textwrap
 import subprocess
-from shutil import which
+from distutils.spawn import find_executable
 from savecurrentgps import parse_arguments, getsettings,\
      checkgarminmount, makenewfilename, copygpxfile, \
      savecompress, writedatefile, preprocess
@@ -190,7 +190,7 @@ def main(myscreen):
     # check for the auxiliary programmes this script may need and
     # inform the user if not found. Return the location of the
     # found script for later subprocess calls
-    preprocessbin = which("preprocessGPX")
+    preprocessbin = find_executable("preprocessGPX")
     if not preprocessbin:
         msg = "The programme preprocessGPX was not found. "
         msg += "You will be able to save a compressed file, "
@@ -199,7 +199,7 @@ def main(myscreen):
         msg += "have a PATH problem because WHICH can't find it."
         info = InfoPress(maxyx, msg)
         info.display()
-    vikingbin = which("viking")
+    vikingbin = find_executable("viking")
     if not vikingbin:
         msg = "Viking was not found on this system. "
         msg += "You will not be able to view or edit GPX files."
