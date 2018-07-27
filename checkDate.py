@@ -16,6 +16,7 @@ Copyright 2018 Daniel Belasco Rogers dan@planbperformance.net
 import sys
 from os import path
 from glob import glob
+from datetime import datetime
 
 from savecurrentgps import getsettings
 from __init__ import CONFIGPATH
@@ -27,7 +28,9 @@ def getlastfiledates(basefilepath, curyear, originaldirname, userdict):
         filepath = path.join(basefilepath, userdict[user] + curyear, originaldirname)
         filepath = "{}/*".format(filepath)
         filelist = glob(filepath)
-        print(max(filelist, key=path.getctime))
+        lastfile = max(filelist, key=path.getctime)
+        lastfiletimestamp = datetime.fromtimestamp(path.getmtime(lastfile)).strftime('%Y-%m-%d %H:%M:%S')
+        print(lastfile, lastfiletimestamp)
         # print(path.join(basefilepath, userdict[user] + curyear, originaldirname))
 
     danlastfiledate = ""
@@ -40,7 +43,7 @@ def main():
     """
     """
 
-    # Load location of settings.cfg file 
+    # Load location of settings.cfg file
     settingspath = path.expanduser(CONFIGPATH)
 
     # Load information from the settings file
@@ -57,7 +60,8 @@ def main():
     sophlastpath = path.join(basefilepath, 'sophlast')
 
     # get modification (saved) dates of last files in relevant directories
-    danlastfiledate, sophlastfiledate = getlastfiledates(basefilepath, curyear, originaldirname, userdict)
+    danlastfiledate, sophlastfiledate = getlastfiledates(basefilepath, curyear,
+                                                         originaldirname, userdict)
 
 
 if __name__ == '__main__':
