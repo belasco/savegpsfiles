@@ -237,7 +237,7 @@ def writedatefile(settingspath, name):
     writefilepath = path.join(settingspath, writefilename)
 
     with open(writefilepath, 'w') as f:
-        f.write("{}".format(datetime.now().isoformat()))
+        f.write("{}".format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
 
     return writefilepath
 
