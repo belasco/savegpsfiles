@@ -3,4 +3,4 @@
 
 __version__ = '0.7'
 CONFIGPATH = '~/.config/savecurrentgps/settings.cfg'
-FILESTRUCTHELPER = 'GPSfilestruct.sh'
+FILESTRUCTHELPER = 'archive_makefolders.py'
