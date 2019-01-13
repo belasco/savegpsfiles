@@ -25,6 +25,7 @@ from distutils.spawn import find_executable
 from os import path, environ
 from datetime import datetime
 from __init__ import __version__, CONFIGPATH, FILESTRUCTHELPER
+from utils import askyesno
 
 
 def parse_arguments():
@@ -172,7 +173,7 @@ def checkfilestruct(basefilepath, curyear):
 
 def makenewfilename(basefilepath, originaldirname, name, curyear):
     """
-    generate a filename and path for the destination GPX file. The
+    generate a filename and path forn the destination GPX file. The
     basename (file name) is then re-used for the preprocessed file
     if it is made.
 
@@ -240,27 +241,6 @@ def writedatefile(settingspath, name):
         f.write("{}".format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
 
     return writefilepath
-
-
-def askyesno(question):
-    """
-    Ask a yes or no question. Loop until the answer is returned.
-    Answering 'q' quits the programme
-    """
-    while 1:
-        answer = input(question).lower()
-        if answer in ('y', 'yes'):
-            answer = True
-        elif answer in ('n', 'no'):
-            answer = False
-        elif answer == 'q':
-            print("You pressed q for Quit... Goodbye")
-            print()
-            sys.exit()
-        return answer
-
-        print('Please answer y or n')
-    return
 
 
 def appwarn(application):
