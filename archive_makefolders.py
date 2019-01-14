@@ -25,15 +25,15 @@ import argparse
 import configparser
 from datetime import datetime
 from shutil import move
-from __init__ import CONFIGPATH, FILESTRUCTHELPER
+from __init__ import CONFIGPATH, DEFAULTBASE
 from utils import askyesno
 
 # folder names (if no config file is found and a new one has to be made)
 ORIGINAL = '1_original'  # name for the folder for original files
 PROCESSED = '2_preprocessed'  # name for the folder for processed files
 CLEANED = '3_cleaned'  # cleaned folder name
-TEMP = '/tmp' # temp folder name
-ARCHIVE = '~/gps_projects/GPS'
+TEMP = '/tmp'  # temp folder name
+ARCHIVE = '~/gps_projects/GPS'  # Base location of archived files.
 
 __version__ = '0.1'
 
@@ -92,7 +92,9 @@ def makeconfigfile(configpath, year, basefilepath, userlist):
         config['users'][user] = str(idx + 1)
 
     with open(configpath, 'w') as f:
-        config.write(f)
+        # no space around equals signs so that bash can read the file too (e.g.
+        # gpsWarn)
+        config.write(f, space_around_delimiters=False)
 
     return
 
@@ -147,9 +149,13 @@ def main():
             print('Not a directory')
             sys.exit(2)
         # make config file if not present
-        print('Config file not found. Please enter a valid ')
-        print('location for the file structure (basefilepath)')
-        basefilepath = askbasefilepath()
+        print('Config file not found. Use default config file location?')
+        print('{}'.format(DEFAULTBASE))
+        ans = askyesno('y/n '.format(DEFAULTBASE))
+        if ans:
+            basefilepath = DEFAULTBASE
+        else:
+            basefilepath = askbasefilepath()
         makeconfigfile(configpath, year, basefilepath, args.userlist)
         print('Wrote a new config file to {}'.format(configpath))
 
@@ -164,7 +170,7 @@ def main():
     checkdir = os.path.join(basefilepath, checkdir)
 
     if not os.path.isdir(checkdir):
-        print('Cannot find files under {}'.format(basefilepath))
+        print('Cannot find files under {}'.format(checkdir))
         print('Will not archive current files')
         print('Script ends here')
         sys.exit()
@@ -182,7 +188,7 @@ def main():
             sys.exit()
 
         # move folders to archive location
-        move(basefilepath, archivelocation)
+        # move(basefilepath, archivelocation)
         
     # update year in config file (create if not found)
     # set up new directory structure
