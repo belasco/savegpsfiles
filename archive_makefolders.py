@@ -74,6 +74,15 @@ def parseargs():
     return parser.parse_args()
 
 
+def writeconfig(config, path):
+    with open(path, 'w') as f:
+        # no space around equals signs so that bash can read the file too (e.g.
+        # gpsWarn)
+        config.write(f, space_around_delimiters=False)
+
+    return
+
+
 def makeconfigfile(configpath, year, basefilepath, userlist):
     config = configparser.ConfigParser()
     garminfilelocation = os.path.join('GARMIN', 'Garmin',
@@ -91,10 +100,7 @@ def makeconfigfile(configpath, year, basefilepath, userlist):
     for idx, user in enumerate(userlist):
         config['users'][user] = str(idx + 1)
 
-    with open(configpath, 'w') as f:
-        # no space around equals signs so that bash can read the file too (e.g.
-        # gpsWarn)
-        config.write(f, space_around_delimiters=False)
+    writeconfig(config, configpath)
 
     return
 
@@ -142,7 +148,7 @@ def main():
     else:
         year = args.year
 
-    # check for config file
+    # check for config file and make one if not present
     if not os.path.isfile(configpath):
         if os.path.isdir(configpath):
             print('Please specify a file to create new config')
@@ -162,11 +168,12 @@ def main():
     # get users, year and locations from config file
     settings = configparser.ConfigParser()
     settings.read(configpath)
-
-    # check there are files in basefile location
     currentyear = settings['core']['currentyear']
     basefilepath = os.path.expanduser(settings['core']['basefilepath'])
-    checkdir = settings.options('users')[0] + currentyear
+    userlist = settings.options('users')
+
+    # check there are files in basefile location
+    checkdir = userlist[0] + currentyear
     checkdir = os.path.join(basefilepath, checkdir)
 
     if not os.path.isdir(checkdir):
@@ -175,7 +182,6 @@ def main():
         print('Script ends here')
         sys.exit()
     else:
-
     # move directories from current to archive location
         archivelocation = os.path.expanduser(settings['core']['archivelocation'])
         archivelocation = os.path.join(archivelocation, currentyear)
@@ -188,10 +194,26 @@ def main():
             sys.exit()
 
         # move folders to archive location
-        # move(basefilepath, archivelocation)
-        
-    # update year in config file (create if not found)
+        for user in userlist:
+            srcfile = os.path.join(basefilepath, user+currentyear)
+            move(srcfile, archivelocation)
+            print('Moved {} to {}'.format(srcfile, archivelocation))
+
+    # update year in config file
+    settings.set('core', 'currentyear', '{}'.format(year))
+    writeconfig(settings, configpath)
+
     # set up new directory structure
+    for user in userlist:
+        userdir = user + str(year)
+        userdir = os.path.join(basefilepath, userdir)
+        os.mkdir(userdir)
+        os.mkdir(os.path.join(userdir, settings['core']['originaldirname']))
+        os.mkdir(os.path.join(userdir, settings['core']['preprocessdirname']))
+        os.mkdir(os.path.join(userdir, settings['core']['cleaneddirname']))
+
+    print('Made new folder structure in {}'.format(basefilepath))
+    print('Script ends successfully here')
 
 
 if __name__ == '__main__':
