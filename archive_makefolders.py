@@ -35,7 +35,7 @@ CLEANED = '3_cleaned'  # cleaned folder name
 TEMP = '/tmp'  # temp folder name
 ARCHIVE = '~/gps_projects/GPS'  # Base location of archived files.
 
-__version__ = '0.1'
+__version__ = '0.2'
 
 
 def parseargs():
