@@ -4,3 +4,4 @@
 __version__ = '0.7'
 CONFIGPATH = '~/.config/savecurrentgps/settings.cfg'
 FILESTRUCTHELPER = 'archive_makefolders.py'
+DEFAULTBASE = '~/selectedplanbfiles/currentGPS'
