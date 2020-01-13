@@ -2,7 +2,7 @@
 
 ## Save GPX files in specified directory structure ##
 
-Copyright 2014 Daniel Belasco Rogers
+Copyright 2014, 2020 Daniel Belasco Rogers
 Keywords: GPS, GPX, Garmin, file copy, utility
 
 Automate the process of saving new gpx files from a GARMIN etrex
@@ -19,10 +19,10 @@ before moving it into the correct (1_original) directory.
 Then it asks the user if they want to view/edit the file in viking,
 if it is on the system.
 
-The utility script GPSfilestruct.sh creates the expected file
-structure using our defaults of two users ('dan' and 'soph') having
-three subfolders in each user folder as follows, where YYYY is the
-year in four figures (i.e. 2015):
+The utility script archive\_makefolders.py with no arguments moves
+the current lot of GPS files into an archive location and creates a
+new structure using our defaults of two users ('dan' and 'soph') having
+three sub-folders in each user folder as follows:
 ```
 currentGPS/
 ├──   dan2015
