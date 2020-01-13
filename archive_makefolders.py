@@ -182,15 +182,20 @@ def main():
         print('Script ends here')
         sys.exit()
     else:
-    # move directories from current to archive location
-        archivelocation = os.path.expanduser(settings['core']['archivelocation'])
-        archivelocation = os.path.join(archivelocation, currentyear)
-        # create folder to hold current gps folders
-        try:
-            os.mkdir(archivelocation)
-        except FileExistsError:
-            print('Archive location {} already exists'.format(archivelocation))
-            print('Check manually. Script ends here')
+        # ask to move directories from current to archive location
+        ans = askyesno("Found files at {}. Do you want to archive them? ".format(checkdir))
+        if ans:
+            archivelocation = os.path.expanduser(settings['core']['archivelocation'])
+            archivelocation = os.path.join(archivelocation, currentyear)
+            # create folder to hold current gps folders
+            try:
+                os.mkdir(archivelocation)
+            except FileExistsError:
+                print('Archive location {} already exists'.format(archivelocation))
+                print('Check manually. Script ends here')
+                sys.exit()
+        else:
+            print("Nothing to do. Script ends here.\n")
             sys.exit()
 
         # move folders to archive location
@@ -200,6 +205,7 @@ def main():
             print('Moved {} to {}'.format(srcfile, archivelocation))
 
     # update year in config file
+    print("Updating year in config file")
     settings.set('core', 'currentyear', '{}'.format(year))
     writeconfig(settings, configpath)
 
