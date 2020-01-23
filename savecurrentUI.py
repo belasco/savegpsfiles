@@ -17,7 +17,6 @@ from distutils.spawn import find_executable
 from savecurrentgps import parse_arguments, getsettings,\
      checkgarminmount, makenewfilename, copygpxfile, \
      savecompress, writedatefile, preprocess
-import logging
 
 
 class Info(object):
