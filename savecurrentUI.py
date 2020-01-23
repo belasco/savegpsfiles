@@ -178,7 +178,8 @@ def main(myscreen):
     garminfilelocation = checkgarminmount(garminfilelocation)
 
     if not garminfilelocation:
-        msg = "No Garmin found. Please plug in, wait for it to produce a GPX file and try again"
+        msg = "No Garmin found. Please plug in, wait for it "
+        msg += "to produce a GPX file and try again"
         info = InfoPress(maxyx, msg)
         info.display()
         exit(2)
