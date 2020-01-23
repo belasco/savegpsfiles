@@ -228,7 +228,7 @@ def main(myscreen):
     savecompress(tempgpxfile, newfilepath)
 
     msg = "Saved GPX file as a compressed file "
-    msg += "{}.gz ".format(tempgpxfile)
+    msg += "{}.gz ".format(newfilepath)
     info = Info(maxyx, msg)
     info.display()
 
@@ -256,5 +256,5 @@ if __name__ == '__main__':
     try:
         curses.wrapper(main)
     except KeyboardInterrupt:
-        print("Got KeyboardInterrupt exception. Exiting...")
+        print("Caught keyboard interrupt. Exiting...")
         exit()
