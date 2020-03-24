@@ -1,6 +1,6 @@
 # savegpsfiles #
 
-## Save GPX files in specified directory structure ##
+## Download GPX files from a GARMIN GPS to specified directory structure ##
 
 Copyright 2014, 2020 Daniel Belasco Rogers
 Keywords: GPS, GPX, Garmin, file copy, utility
