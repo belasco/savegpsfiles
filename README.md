@@ -26,12 +26,13 @@ this original file straight off the GPS by copying the gpx file
 from the Garmin device to a temporary folder and zipping it (with
 gzip) before moving it into the archive (`1_original`) directory.
 
-It also uses the related script [gpxprocessing]:
-https://github.com/belasco/gpxprocessing if present on the system,
-to save a stripped down version of the original file to the
-`2_preprocessed` directory. See that script for details. Then it
-asks the user if they want to view/edit the file in [viking]:
-https://sourceforge.net/projects/viking/, if it is on the system.
+It also uses the related script
+[gpxprocessing](https://github.com/belasco/gpxprocessing) if
+present on the system, to save a stripped down version of the
+original file to the `2_preprocessed` directory. See that script
+for details. Then it asks the user if they want to view/edit the
+file in [viking](https://sourceforge.net/projects/viking/), if it
+is on the system.
 
 The utility script archive\_makefolders.py with no arguments moves
 the current lot of GPS files into an archive location and creates a
