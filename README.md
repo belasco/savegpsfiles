@@ -14,7 +14,7 @@ which is in my PATH. savecurrentgps loads settings from the file
 `settings.cfg` This file contains the locations to look for where
 the GPS is mounted to and the folders to expect to save files to.
 If this settings file is missing, running archive\_makefolders.py
-will create it. See the global variable CONFIGPATH in __init__.py
+will create it. See the global variable CONFIGPATH in `__init__.py`
 which defines the default location for this.
 
 The main script checks for the GPS, which should have been mounted
