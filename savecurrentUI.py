@@ -14,9 +14,7 @@ import curses
 import textwrap
 import subprocess
 from distutils.spawn import find_executable
-from savecurrentgps import parse_arguments, getsettings,\
-     checkgarminmount, makenewfilename, copygpxfile, \
-     savecompress, writedatefile, preprocess
+import savecurrentgps as s
 
 
 class Info(object):
@@ -167,15 +165,16 @@ def main(myscreen):
     initscreen(myscreen)
     maxyx = myscreen.getmaxyx()
 
-    args = parse_arguments()
+    # don't forget s is savecurrentgps (see import)
+    args = s.parse_arguments()
 
     # read settings
     garminfilelocation, curyear, basefilepath,\
         originaldirname, preprocessdirname, tempfilelocation,\
-        userdict = getsettings(args.settingspath)
+        userdict = s.getsettings(args.settingspath)
 
     # check if the garmin is mounted to the location specified in settings
-    garminfilelocation = checkgarminmount(garminfilelocation)
+    garminfilelocation = s.checkgarminmount(garminfilelocation)
 
     if not garminfilelocation:
         msg = "No Garmin found. Please plug in, wait for it "
@@ -215,24 +214,24 @@ def main(myscreen):
 
     # create the new file path using the various settings and
     # calculated values
-    newfilepath = makenewfilename(basefilepath,
-                                  originaldirname,
-                                  name, curyear)
+    newfilepath = s.makenewfilename(basefilepath,
+                                    originaldirname,
+                                    name, curyear)
 
     # copy gpx file from Garmin to temporary location set by settings
-    tempgpxfile = copygpxfile(tempfilelocation,
-                              newfilepath,
-                              garminfilelocation)
+    tempgpxfile = s.copygpxfile(tempfilelocation,
+                                newfilepath,
+                                garminfilelocation)
 
     # use gzip to compress that file and save it in the 'original' folder
-    savecompress(tempgpxfile, newfilepath)
+    s.savecompress(tempgpxfile, newfilepath)
 
     msg = "Saved GPX file as a compressed file "
     msg += "{}.gz ".format(newfilepath)
     info = Info(maxyx, msg)
     info.display()
 
-    timefilepath = writedatefile(basefilepath, name)
+    timefilepath = s.writedatefile(basefilepath, name)
     msg = "Wrote current time to {} ".format(timefilepath)
     info = Info(maxyx, msg)
     info.display
@@ -241,8 +240,8 @@ def main(myscreen):
         msg = "Pre-processing and saving a copy in {}".format(preprocessdirname)
         info = Info(maxyx, msg)
         info.display
-        preprocessout = preprocess(tempgpxfile, newfilepath,
-                                   preprocessdirname, preprocessbin)
+        preprocessout = s.preprocess(tempgpxfile, newfilepath,
+                                     preprocessdirname, preprocessbin)
 
     if vikingbin:
         title = "Open the file in Viking?"
